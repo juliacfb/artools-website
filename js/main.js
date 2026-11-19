@@ -437,10 +437,16 @@
     }
   }
 
-  /* Posição da caneta ancorada na tipografia (≥1024px).
-     O eixo da caneta cruza o par "ca" final de "tecnológica" — o acento de "ó"
-     nunca fica coberto — e a cauda termina antes do trilho lateral. */
-  const PEN_AXIS = (26.6 + 9) * Math.PI / 180;   // inclinação do recorte (26.6°) + rotação CSS (9°)
+  /* Posição da caneta (≥1024px), em unidades fluidas da grade e do título:
+     - centro mira 64% da viewport (PEN_TARGET);
+     - a ponta traseira termina antes da linha direita da grade (= botão de tema) e do trilho,
+       com respiro clamp(1rem, 2vw, 3rem);
+     - o eixo cruza "mais tecnológica" logo DEPOIS da última letra: o corpo inclinado passa
+       por trás só do fim da palavra (≈ "ica"), e o resto continua legível;
+     - a altura sai desse cruzamento (inclinação fixa), e a ponta superior nunca invade o header.
+     Escala e inclinação são as de antes (largura = 5.6 × corpo do título). */
+  const PEN_AXIS = (25.2 + 9) * Math.PI / 180;   // eixo do recorte (25.2°, medido por PCA) + rotação CSS (9°)
+  const PEN_TARGET = 0.64;
   function offsetIn(el, ancestor) {               // posição de layout (ignora transforms)
     let x = 0, y = 0;
     for (let n = el; n && n !== ancestor; n = n.offsetParent) { x += n.offsetLeft; y += n.offsetTop; }
@@ -451,28 +457,39 @@
     const ghost = $('.outline--ghost');
     const inner = ghost.parentElement;
     const node = ghost.firstChild;
-    const text = node.data;
-    const iA = text.length - 1, iC = text.length - 2;          // "...c" "a"
-    const rect = (s, e) => { const r = document.createRange(); r.setStart(node, s); r.setEnd(node, e); return r.getBoundingClientRect(); };
+    const r = document.createRange();
+    r.setStart(node, node.data.length - 1); r.setEnd(node, node.data.length);
+    const aR = r.getBoundingClientRect();                     // última letra ("a")
     const ir = inner.getBoundingClientRect();
-    const cR = rect(iC, iC + 1), aR = rect(iA, iA + 1);
     const T = parseFloat(getComputedStyle(title).fontSize);
     const base = offsetIn(inner, hero);
-    // ponto de cruzamento: entre "c" e "a", na metade da altura-x (Inter: ascent .969, x-height .546)
-    const qx = base.x + (cR.right + aR.left) / 2 - ir.left;
+    const vw = document.documentElement.clientWidth;
+    const ux = Math.cos(PEN_AXIS), uy = Math.sin(PEN_AXIS), tan = uy / ux;
+
+    // cruzamento: logo após o fim da palavra, na metade da altura-x (Inter: ascent .969, x-height .546)
+    const qx = base.x + (aR.right - ir.left) + 0.15 * T;
     const qy = base.y + (aR.top - ir.top) + 0.969 * T - 0.27 * T;
-    const ux = Math.cos(PEN_AXIS), uy = Math.sin(PEN_AXIS);
-    const railLeft = $('.rail').getBoundingClientRect().left - 28;
-    let W = Math.min(5.6 * T, innerWidth * 0.5);
-    let L = W * 1.08;                                         // comprimento do eixo ≈ 1.08 × largura do recorte
-    let s = Math.min(L * 0.16, (railLeft - qx) / ux - L / 2);
-    if (s < -L * 0.1) {                                        // pouco espaço: encolhe a caneta
-      W = Math.max(14 * 16, ((railLeft - qx) / ux + L * 0.1) * 2 / 1.08);
-      L = W * 1.08; s = -L * 0.1;
-    }
+
+    const W = Math.min(5.6 * T, vw * 0.5);                    // mesma escala de antes
+    const L = W * 1.08;                                       // comprimento do eixo
     const H = W * 783 / 1446;
-    const cx = qx + s * ux, cy = qy + s * uy;
+    const thick = 0.05 * W;                                   // meia-espessura visual (corpo + clipe)
+    const reachX = (L / 2) * ux + thick, reachY = (L / 2) * uy + thick;
+
+    // limites horizontais: linha direita da grade e trilho, menos o respiro
+    const gridRight = vw - parseFloat(getComputedStyle($('.site-header')).paddingRight);
+    const breathe = Math.min(Math.max(16, vw * 0.02), 48);
+    const limit = Math.min(gridRight, $('.rail').getBoundingClientRect().left) - breathe;
+
+    let cx = vw * PEN_TARGET;
+    cx = Math.min(cx, qx - 0.35 * T + (L / 2) * ux);          // a tampa ainda cruza o fim da palavra
     const stageTop = $('.hero__stage').offsetTop;
+    const minTop = stageTop + 0.04 * innerHeight;             // ponta superior abaixo do header
+    const cxForTop = qx + (minTop + reachY - qy) / tan;
+    cx = Math.max(cx, cxForTop);
+    cx = Math.min(cx, limit - reachX);                        // a cauda termina antes da grade/trilho
+    const cy = qy + (cx - qx) * tan;                          // o eixo passa por (qx, qy)
+
     Object.assign(penEl.style, {
       width: `${W}px`, left: `${cx - W / 2}px`, top: `${cy - H / 2 - stageTop}px`, right: 'auto', marginTop: '0px',
     });
@@ -740,11 +757,35 @@
       host.addEventListener('pointerleave', () => setActive(null));
     });
 
+    // Régua de 140 mm: linhas de extensão nas extremidades EXATAS da caneta (medidas no
+    // layout, sem transforms) e cota no nível 616/680 da prancha. Fig. 01 alinhada à mesma borda.
+    const plate = $('.anat__plate', anat);
+    const ruler = $('.anat__ruler', anat);
+    const fig = $('.anat__fig', anat);
+    const penBox = $('.anat__pen', anat);
+    const penImg = $('img', penBox);
+    const PEN_PAD = 6 / 1574;                    // margem transparente do recorte (pen_horizontal.py)
+    const RULER_Y = 616 / 680;                   // linha da cota, em fração da altura da prancha
+    function sizeRuler() {
+      if (innerWidth < 1024 || !penImg.offsetWidth) return;
+      const w = penImg.offsetWidth;
+      const left = penBox.offsetLeft + w * PEN_PAD;
+      const top = penBox.offsetTop + penBox.offsetHeight;
+      Object.assign(ruler.style, {
+        left: `${left}px`, width: `${w * (1 - 2 * PEN_PAD)}px`,
+        top: `${top}px`, height: `${plate.offsetHeight * RULER_Y - top}px`,
+      });
+      fig.style.left = `${left}px`;
+    }
+    sizeRuler();
+    if (!penImg.complete) penImg.addEventListener('load', () => { sizeRuler(); ScrollTrigger.refresh(); }, { once: true });
+    ScrollTrigger.addEventListener('refreshInit', sizeRuler);
+
     if (REDUCED) return;            // composição final estática, tudo visível
     const q = s => $$(s, anat);
     const part = n => ({
       dot: q(`.anat__dot[data-part="${n}"]`),
-      lines: q(`.anat__line[data-part="${n}"], .anat__tick[data-part="${n}"]`),
+      lines: q(`.anat__line[data-part="${n}"]`),
       idx: q(`.note[data-part="${n}"] .note__idx`),
       text: q(`.note[data-part="${n}"] .note__text`),
     });
@@ -755,26 +796,33 @@
     // 3) a lupa abre com clip-path circular e zoom interno.
     mm.add('(min-width: 1024px)', () => {
       const pen = $('.anat__pen', anat);
-      const pin = ScrollTrigger.create({ trigger: anat, start: 'top top', end: '+=170%', pin: true, anticipatePin: 1 });
+      // palco compacto: pina centralizado na área útil abaixo do header (sem faixa morta)
+      const pinStart = () => {
+        const h = headerH(), free = innerHeight - h;
+        return anat.offsetHeight < free ? `center ${h + free / 2}px` : `top ${h}px`;
+      };
+      const pin = ScrollTrigger.create({ trigger: anat, start: pinStart, end: '+=170%', pin: true, anticipatePin: 1, invalidateOnRefresh: true });
       const tl = gsap.timeline({
         defaults: { ease: 'none' },
         scrollTrigger: { trigger: anat, start: 'top 55%', end: () => pin.end, scrub: true, invalidateOnRefresh: true },
       });
-      gsap.set(q('.anat__line, .anat__tick'), { strokeDasharray: 1, strokeDashoffset: 1 });
+      gsap.set(q('.anat__line'), { strokeDasharray: 1, strokeDashoffset: 1 });
 
       tl.fromTo(pen,
         { rotation: 34, xPercent: -14, yPercent: -230, autoAlpha: 0 },     // 34° = inclinação da caneta no hero
         { rotation: 0, xPercent: 0, yPercent: 0, autoAlpha: 1, duration: 0.3, ease: EXPO }, 0)
         .fromTo('.anat__shadow', { scaleX: 0.2, autoAlpha: 0 }, { scaleX: 1, autoAlpha: 1, duration: 0.14, ease: EXPO }, 0.18)
-        .fromTo(q('.anat__axis, .anat__ext'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.08 }, 0.24);
+        .fromTo(q('.anat__axis, .anat__ruler-ext'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.08 }, 0.24);
 
       const callout = (n, t) => {
         const p = part(n);
         tl.fromTo(p.dot, { scale: 0 }, { scale: 1.9, duration: 0.025, ease: 'power2.out' }, t)
           .to(p.dot, { scale: 1, duration: 0.035, ease: ELASTIC }, t + 0.025)
-          .to(p.lines, { strokeDashoffset: 0, duration: 0.05, ease: 'power2.out' }, t + 0.02)
           .fromTo(p.idx, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.03 }, t + 0.05)
           .fromTo(p.text, { yPercent: 110 }, { yPercent: 0, duration: 0.045, ease: EXPO }, t + 0.055);
+        // linha do callout (SVG); a /05 é a cota da régua, que abre do centro para as pontas
+        if (p.lines.length) tl.to(p.lines, { strokeDashoffset: 0, duration: 0.05, ease: 'power2.out' }, t + 0.02);
+        if (n === 5) tl.fromTo('.anat__ruler-line', { scaleX: 0 }, { scaleX: 1, duration: 0.06, ease: EXPO }, t + 0.02);
       };
       [2, 3, 4, 6, 5].forEach((n, i) => callout(n, 0.3 + i * 0.07));
 

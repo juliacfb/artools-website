@@ -852,21 +852,23 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
 }
 .media--wide { aspect-ratio: 16 / 10; }
 
-/* ---------- 5.3 PRODUTO — anatomia (prancha técnica) ----------
-   Prancha 16:9: todas as coordenadas são % da prancha (notas, lupa) ou % da caneta (pontos).
-   O SVG usa viewBox 1600×900 (mesma proporção), então linhas e rótulos nunca se desalinham. */
+/* ---------- 5.3 PRODUTO — anatomia (prancha técnica compacta) ----------
+   Prancha 1600×680: coordenadas em % da prancha (notas, lupa, legenda) ou % da caneta (pontos).
+   O SVG usa o mesmo viewBox, então linhas e rótulos nunca se desalinham. A régua de 140 mm é
+   um elemento medido via JS (sizeRuler) nas extremidades exatas da caneta. */
 .anat {
   position: relative;
-  padding: var(--sp-10) var(--pad-cell) var(--sp-10);
+  padding: var(--sp-12) var(--pad-cell);
   border-bottom: 1px solid var(--line);
 }
 .anat__plate { position: relative; }
+/* DS: crosshairs nos cantos (hero v3) — cantos do palco */
 .anat__reg { position: absolute; width: 14px; height: 14px; pointer-events: none; }
 .anat__reg::before, .anat__reg::after { content: ""; position: absolute; background: var(--text-meta); }
 .anat__reg::before { left: 50%; top: 0; bottom: 0; width: 1px; }
 .anat__reg::after { top: 50%; left: 0; right: 0; height: 1px; }
-.anat__reg--tl { left: -7px; top: -7px; } .anat__reg--tr { right: -7px; top: -7px; }
-.anat__reg--bl { left: -7px; bottom: -7px; } .anat__reg--br { right: -7px; bottom: -7px; }
+.anat__reg--tl { left: var(--sp-4); top: var(--sp-4); } .anat__reg--tr { right: var(--sp-4); top: var(--sp-4); }
+.anat__reg--bl { left: var(--sp-4); bottom: var(--sp-4); } .anat__reg--br { right: var(--sp-4); bottom: var(--sp-4); }
 
 .anat__pen img { display: block; width: 100%; height: auto; aspect-ratio: 1574 / 204; user-select: none; -webkit-user-drag: none; }
 .anat__dot {
@@ -884,6 +886,15 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
 .note__mask { display: block; overflow: hidden; }
 .note__text { display: block; transition: color var(--d-instant) var(--ease-out); }
 .note.is-active .note__text { color: var(--text); }
+/* rótulo da régua: índice e texto numa cor só (DS: label mono stone-600) */
+.note--dim .note__idx { color: inherit; }
+.note--dim.is-active { color: var(--text); }
+
+/* legendas (DS: "Fig. NN — X", mono, discretas, fora da imagem) */
+.anat__fig, .anat__loupe-cap {
+  margin: 0; font-family: var(--font-mono); font-size: var(--fs-overline); letter-spacing: var(--tr-widest);
+  text-transform: uppercase; line-height: 1.6; color: var(--text-2);
+}
 
 /* lupa: a foto (fundo branco) é multiplicada sobre um disco da cor do DS */
 .anat__loupe { margin: 0; aspect-ratio: 1; border-radius: 50%; transition: opacity var(--d-instant) var(--ease-out); }
@@ -905,39 +916,35 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
   position: absolute; inset: -.5rem; border-radius: 50%;
   border: 1px dashed var(--line); animation: spin 40s linear infinite; pointer-events: none;   /* DS: anel da lente */
 }
-.anat__caption {
-  display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--sp-2) var(--sp-6);
-  margin: 0; padding-top: var(--sp-3);
-  border-top: 1px solid var(--line);
-  font-family: var(--font-mono); font-size: var(--fs-overline); letter-spacing: var(--tr-widest);
-  text-transform: uppercase; color: var(--text-2);
-}
+
+/* régua 140 mm: linhas de extensão tracejadas + cota com marcas nas pontas */
+.anat__ruler { position: absolute; left: 12.29%; width: 75.42%; top: 67.3%; height: 23.3%; pointer-events: auto; transition: opacity var(--d-instant) var(--ease-out); }
+.anat__ruler-ext { position: absolute; inset: 0; border-inline: 1px dashed var(--line); }
+.anat__ruler-line { position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--anat-line); transition: background-color var(--d-instant) var(--ease-out); }
+.anat__ruler-line::before, .anat__ruler-line::after { content: ""; position: absolute; top: -6px; width: 1px; height: 13px; background: inherit; }
+.anat__ruler-line::before { left: 0; } .anat__ruler-line::after { right: 0; }
+.anat__ruler.is-active .anat__ruler-line { background: var(--text); }
 
 /* destaque cruzado callout ↔ especificação */
 .anat.has-active [data-part]:not(.is-active) { opacity: .18; }
-.anat__line.is-active, .anat__tick.is-active { stroke: var(--text); }
+.anat__line.is-active { stroke: var(--text); }
 
 /* --- Desktop: prancha com coordenadas absolutas (+ pin no JS) --- */
 @media (min-width: 1024px) {
-  .anat {
-    min-height: 100svh; display: flex; flex-direction: column; justify-content: center;
-    padding-top: calc(var(--header-h) + var(--sp-6)); padding-bottom: var(--sp-8);
-  }
-  .anat__plate { width: min(100%, calc((100svh - var(--header-h) - 9rem) * 16 / 9)); aspect-ratio: 16 / 9; margin: 0 auto var(--sp-12); }
-  .anat__caption { position: absolute; left: 0; right: 0; top: calc(100% + var(--sp-6)); }
+  .anat { padding-block: var(--sp-16) var(--sp-12); }
+  .anat__plate { width: min(100%, calc((100svh - var(--header-h) - 12rem) * 1600 / 680)); aspect-ratio: 1600 / 680; margin-inline: auto; }
 
   .anat__svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
   /* sem non-scaling-stroke: ele anula o pathLength do desenho. 1.25 u ≈ 1px na largura da prancha */
   .anat__svg path { stroke-width: 1.25; }
   .anat__axis { stroke: var(--line); stroke-dasharray: 2 6; }
-  .anat__ext { stroke: var(--line); stroke-dasharray: 3 5; }
-  .anat__line, .anat__tick { stroke: var(--anat-line); transition: stroke var(--d-instant) var(--ease-out), opacity var(--d-instant) var(--ease-out); }
+  .anat__line { stroke: var(--anat-line); transition: stroke var(--d-instant) var(--ease-out), opacity var(--d-instant) var(--ease-out); }
 
-  /* caneta: left 12% · top 37.25% · largura 76% */
-  .anat__pen { position: absolute; left: 12%; top: 37.25%; width: 76%; z-index: 1; }
+  /* caneta: left 12% · top 44.12% (300/680) · largura 76% */
+  .anat__pen { position: absolute; left: 12%; top: 44.12%; width: 76%; z-index: 1; }
   .anat__pen img { filter: drop-shadow(0 18px 18px rgb(28 25 23 / .08)); }
   .anat__shadow {
-    position: absolute; left: 14%; right: 12%; top: 53.6%; height: 7%; pointer-events: none;
+    position: absolute; left: 14%; right: 12%; top: 65.5%; height: 9%; pointer-events: none;
     background:
       radial-gradient(50% 30% at 50% 22%, var(--pen-shadow), transparent 100%),
       radial-gradient(50% 50% at 50% 30%, rgb(28 25 23 / .10), transparent 100%);
@@ -961,16 +968,21 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
   .note--dim { flex-direction: row; gap: .8em; transform: translate(-50%, -50%); padding: .2em .9em; background: var(--bg); }
   .note__sep { display: block; height: 0; overflow: hidden; }   /* vira quebra de linha */
 
-  /* lupa: centro (14.5%, 17%), diâmetro 16% da largura */
-  .anat__loupe { position: absolute; left: 6.5%; top: 2.78%; width: 16%; z-index: 2; }
-  .anat__loupe-cap { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } /* a legenda visível fica abaixo da prancha */
+  /* Fig. 01: logo abaixo da régua, alinhada à borda esquerda da caneta (left via JS) */
+  .anat__fig { position: absolute; left: 12.29%; top: 94.1%; white-space: nowrap; }
+
+  /* lupa: centro (22%, 22.35%), diâmetro 16% da largura. Fig. 02 colada à lupa, alinhada à base dela,
+     do lado esquerdo: embaixo não há folga (a tampa da caneta está a ~3% da lupa e a linha /01 sobe ali) */
+  .anat__loupe { position: absolute; left: 14%; top: 3.53%; width: 16%; z-index: 2; }
+  .anat__loupe-cap { position: absolute; right: calc(100% + var(--sp-4)); bottom: 0; text-align: right; white-space: nowrap; }
 }
 
 /* --- Mobile/tablet: sem pin; caneta na diagonal com pontos numerados, lista abaixo --- */
 @media (max-width: 1023px) {
-  .anat__svg, .anat__shadow, .anat__caption span:last-child { display: none; }
-  .anat__plate { display: flex; flex-direction: column; gap: var(--sp-8); padding-block: var(--sp-4); }
-  .anat__pen { position: relative; width: 90%; margin: 13% auto 11%; rotate: 16deg; filter: drop-shadow(0 16px 14px rgb(28 25 23 / .14)); }
+  .anat__svg, .anat__shadow, .anat__ruler { display: none; }
+  .anat__plate { display: flex; flex-direction: column; gap: var(--sp-6); padding-block: var(--sp-4); }
+  .anat__pen { position: relative; width: 90%; margin: 13% auto 9%; rotate: 16deg; filter: drop-shadow(0 16px 14px rgb(28 25 23 / .14)); }
+  .anat__fig { padding-top: var(--sp-3); border-top: 1px solid var(--line); }
   .anat__dot {
     width: 1.25rem; height: 1.25rem; margin: -.625rem 0 0 -.625rem;
     display: grid; place-items: center;
@@ -984,60 +996,48 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
     padding: var(--sp-3) 0; border-top: 1px solid var(--line);
     font-size: var(--fs-label); letter-spacing: var(--tr-widest); line-height: 1.5;
   }
-  .anat__loupe { position: relative; width: min(64%, 18rem); margin: 0 auto var(--sp-8); }
-  .anat__loupe-cap {
-    position: absolute; top: calc(100% + var(--sp-4)); left: 50%; transform: translateX(-50%);
-    white-space: nowrap; font-family: var(--font-mono); font-size: var(--fs-overline);
-    letter-spacing: var(--tr-widest); text-transform: uppercase; color: var(--text-2);
-  }
+  .anat__loupe { position: relative; width: min(64%, 18rem); margin: var(--sp-4) auto var(--sp-12); }
+  .anat__loupe-cap { position: absolute; top: calc(100% + var(--sp-4)); left: 50%; transform: translateX(-50%); white-space: nowrap; }
+  .anat__loupe-cap br { display: none; }
 }
 
-/* ---------- Especificações (/01–/06 ↔ callouts) ---------- */
+/* ---------- Especificações: grade bento (/01–/06 ↔ callouts) ----------
+   DS: grade gap-px com células cor de canvas (3.3 Cards) + bloco grande ao lado de células
+   (coluna de stats do hero v3) + ritmo do swatch "Core" (rótulo → valor → ficha, sem vazio no meio). */
 .specs {
-  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1px; background: var(--line);
+  display: grid; grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "ponta" "foto" "tampa" "material" "peso" "comp" "tinta";
+  gap: 1px;
 }
-@media (min-width: 768px) { .specs { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-@media (min-width: 1024px) { .specs { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+/* as linhas de 1px do DS são desenhadas por cada célula (outline no gap): entram junto com o
+   bloco no reveal, sem o fundo cinza da grade aparecer enquanto a célula está invisível */
+.specs > .spec { outline: 1px solid var(--line); }
+.spec--ponta { grid-area: ponta; } .spec--photo { grid-area: foto; }
+.spec--tampa { grid-area: tampa; } .spec--material { grid-area: material; }
+.spec--peso { grid-area: peso; } .spec--comp { grid-area: comp; } .spec--tinta { grid-area: tinta; }
+@media (min-width: 768px) {
+  .specs { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-areas: "ponta ponta" "foto foto" "tampa material" "peso comp" "tinta tinta"; }
+}
+@media (min-width: 1024px) {
+  .specs { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-areas: "ponta ponta foto foto" "tampa material peso comp" "tinta tinta tinta tinta"; }
+}
+/* novo: 6 colunas no desktop largo — dois quadrados 2×2 flanqueando quatro células, faixa de tinta embaixo */
+@media (min-width: 1600px) {
+  .specs { grid-template-columns: repeat(6, minmax(0, 1fr)); grid-template-areas: "ponta ponta tampa material foto foto" "ponta ponta peso comp foto foto" "tinta tinta tinta tinta tinta tinta"; }
+}
 .spec.is-active { background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-strong); }
 .specs.has-active .spec[data-part]:not(.is-active) > * { opacity: .45; }
 .spec > * { transition: opacity var(--d-instant) var(--ease-out); }
 
-/* Foto de contexto: cores naturais, pequena e secundária */
-.spec--context { gap: var(--sp-5); }
-.spec--context dd { flex: 1; display: flex; }
-.context { margin: 0; display: flex; flex-direction: column; gap: var(--sp-4); width: 100%; }
-.context__img { position: relative; flex: 1; min-height: 14rem; overflow: hidden; background: var(--stone-200); }
-.context__img img {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  object-fit: cover; object-position: 50% 46%;          /* a diagonal da caneta inteira no quadro */
-  transition: transform var(--d-slow) var(--ease-out);
-}
-.spec--context:hover .context__img img { transform: scale(1.04); }
-.context__cap {
-  padding-top: var(--sp-3); border-top: 1px solid var(--line);
-  font-family: var(--font-mono); font-size: var(--fs-overline); letter-spacing: var(--tr-widest);
-  text-transform: uppercase; line-height: 1.6; color: var(--text-2);
-}
-@media (min-width: 1024px) { .spec--context { grid-row: span 2; } }
-/* ≥2400px: as 6 specs + o contexto numa única linha (cards ~320px, sem esticar) */
-@media (min-width: 2400px) {
-  .specs { grid-template-columns: repeat(7, minmax(0, 1fr)); }
-  .spec--context { grid-row: auto; order: 1; }
-}
-@media (max-width: 1023px) {
-  .spec--context { grid-column: 1 / -1; order: 1; }
-  .context { flex-direction: row; align-items: flex-end; }
-  .context__img { flex: 0 0 42%; min-height: 0; aspect-ratio: 4 / 5; }
-}
 .spec {
   position: relative; overflow: hidden;
-  display: flex; flex-direction: column; justify-content: space-between; gap: var(--sp-8);
-  min-height: 13rem; padding: var(--sp-6) var(--pad-cell);
+  display: flex; flex-direction: column; gap: var(--sp-6);
+  padding: var(--sp-8) var(--pad-cell);
   background: var(--bg);
   transition: background-color var(--d-base) var(--ease-out);
 }
 .spec:hover { background: var(--surface); }
+.spec > dd { flex: 1; display: flex; flex-direction: column; }
 .spec__top { display: flex; justify-content: space-between; align-items: flex-start; }
 .spec dt { font-family: var(--font-mono); font-size: var(--fs-overline); letter-spacing: var(--tr-widest); text-transform: uppercase; color: var(--text-2); }
 .spec__idx { font-family: var(--font-mono); font-size: var(--fs-overline); color: var(--text-deco); }
@@ -1045,6 +1045,45 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
 .spec__value small { font-size: .45em; letter-spacing: 0; color: var(--text-2); margin-left: .15em; font-weight: 400; }
 .spec:hover .spec__value { transform: translateX(.5rem); }
 .spec__desc { margin-top: var(--sp-2); max-width: 40ch; font-size: var(--fs-sm); line-height: var(--lh-relaxed); color: var(--text-2); }
+
+/* traços finos desenhados na entrada (DS: draw-path / marker-draw, via [data-viz]) */
+.spec__art { display: block; width: 100%; height: auto; overflow: visible; color: var(--text); }
+.spec__art .viz-line { stroke: currentColor; stroke-width: 1.25; stroke-linecap: round; stroke-linejoin: round; }
+.spec__art .nib__dim { stroke: var(--anat-line); }
+.nib__axis { stroke: var(--line); stroke-width: 1; stroke-dasharray: 8 3 1 3; }
+.nib__txt { fill: var(--text-2); font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .1em; }
+@media (max-width: 767px) { .nib__txt { font-size: 11px; } }   /* ~9px reais no celular */
+
+/* destaque: Ponta 0.1 (DS: display 96px · 60px mobile) */
+.spec--ponta .spec__value { font-size: clamp(3.75rem, 2.4rem + 3.6vw, var(--fs-display)); line-height: .9; }
+.spec--ponta .spec__value small { font-family: var(--font-mono); font-size: .2em; letter-spacing: var(--tr-widest); margin-left: .4em; }
+.spec--ponta .spec__desc { font-size: var(--fs-base); }
+.spec--ponta .nib { max-width: 34rem; margin-top: auto; padding-top: var(--sp-10); }
+
+/* régua do comprimento e gota da tinta */
+.spec--comp .ruler { max-width: 20rem; margin-top: var(--sp-6); }
+.spec--tinta .drop { width: 4.5rem; }
+
+/* foto (DS: project card + image strip): enquadrada, reveal com clip-path e parallax interno */
+.spec__figure { margin: 0; flex: 1; display: flex; flex-direction: column; gap: var(--sp-3); }
+.media--warm { flex: 1; min-height: 18rem; }
+/* novo: dessaturação leve + tom quente-neutro, para a madeira conversar com a paleta stone */
+.media--warm img { object-position: 48% 46%; filter: saturate(.6) sepia(.12) contrast(1.02); }
+.spec--photo:hover .media--warm img { filter: saturate(.85) sepia(.06) contrast(1.02); }
+[data-theme="dark"] .media--warm img { filter: saturate(.55) sepia(.12) brightness(.82); }
+.spec__figcap {
+  padding-top: var(--sp-3); border-top: 1px solid var(--line);
+  font-family: var(--font-mono); font-size: var(--fs-overline); letter-spacing: var(--tr-widest);
+  text-transform: uppercase; line-height: 1.6; color: var(--text-2);
+}
+
+/* faixa da tinta: texto · gota · ficha técnica */
+.spec--tinta > dd { display: grid; gap: var(--sp-6) var(--sp-12); align-items: center; }
+/* texto à esquerda, gota ao centro, ficha alinhada à borda direita — larguras de leitura fixas */
+@media (min-width: 768px) { .spec--tinta > dd { grid-template-columns: minmax(0, 26rem) auto minmax(0, 28rem); justify-content: space-between; } }
+/* DS: dl.spec (ficha técnica mono), renomeada para não colidir com o card .spec */
+.spec-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .9rem 1rem; margin: 0; }
+.spec-list dd { margin: 2px 0 0; font-family: var(--font-mono); font-size: 11px; line-height: 1.4; color: var(--text-body); }
 
 /* Flashlight (DS: radial que segue o mouse + trace border) */
 .flashlight::before {

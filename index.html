@@ -273,26 +273,24 @@
           <div class="sec-head__num" aria-hidden="true"><span data-drift>03</span></div>
         </header>
 
-        <!-- Anatomia: prancha técnica 16:9. Coordenadas em % da prancha; pontos em % da caneta.
-             Caneta: left 12% · top 37.25% · largura 76% (altura 17.51%, recorte 1574×204). -->
+        <!-- Anatomia: prancha técnica 1600×680 (compacta). Coordenadas em % da prancha; pontos em % da caneta.
+             Caneta: left 12% · top 44.12% · largura 76% (recorte 1574×204). A régua é medida via JS (sizeRuler). -->
         <div class="anat" data-anat>
-          <div class="anat__plate">
-            <span class="anat__reg anat__reg--tl" aria-hidden="true"></span>
-            <span class="anat__reg anat__reg--tr" aria-hidden="true"></span>
-            <span class="anat__reg anat__reg--bl" aria-hidden="true"></span>
-            <span class="anat__reg anat__reg--br" aria-hidden="true"></span>
+          <!-- DS: crosshairs nos cantos (hero v3) — nos cantos do palco -->
+          <span class="anat__reg anat__reg--tl" aria-hidden="true"></span>
+          <span class="anat__reg anat__reg--tr" aria-hidden="true"></span>
+          <span class="anat__reg anat__reg--bl" aria-hidden="true"></span>
+          <span class="anat__reg anat__reg--br" aria-hidden="true"></span>
 
-            <!-- linhas de anotação, eixo e cota (viewBox = proporção da prancha) -->
-            <svg class="anat__svg" viewBox="0 0 1600 900" preserveAspectRatio="none" fill="none" aria-hidden="true">
-              <path class="anat__axis" d="M64 414H1536" />
-              <path class="anat__ext" d="M192 496V810M1408 470V810" />
-              <path class="anat__line anat__dim" data-part="5" pathLength="1" d="M192 792H1408" />
-              <path class="anat__tick" data-part="5" pathLength="1" d="M192 780V804M1408 780V804" />
-              <path class="anat__line" data-part="1" pathLength="1" d="M206.6 401.4L219 280.3" />
-              <path class="anat__line" data-part="2" pathLength="1" d="M459.5 464.5V612" />
-              <path class="anat__line" data-part="3" pathLength="1" d="M678.4 382.5V162" />
-              <path class="anat__line" data-part="4" pathLength="1" d="M800 423.5V612" />
-              <path class="anat__line" data-part="6" pathLength="1" d="M1189.1 423.5V162" />
+          <div class="anat__plate">
+            <!-- linhas de anotação e eixo (viewBox = proporção da prancha) -->
+            <svg class="anat__svg" viewBox="0 0 1600 680" preserveAspectRatio="none" fill="none" aria-hidden="true">
+              <path class="anat__axis" d="M64 379H1536" />
+              <path class="anat__line" data-part="1" pathLength="1" d="M206.6 366.2L280.1 257.9" />
+              <path class="anat__line" data-part="2" pathLength="1" d="M459.5 429.2V532" />
+              <path class="anat__line" data-part="3" pathLength="1" d="M678.4 347.3V200" />
+              <path class="anat__line" data-part="4" pathLength="1" d="M800 388.3V532" />
+              <path class="anat__line" data-part="6" pathLength="1" d="M1189.1 388.3V200" />
             </svg>
 
             <div class="anat__shadow" aria-hidden="true"></div>
@@ -308,69 +306,117 @@
               <span class="anat__dot" data-part="6" style="--px:82;--py:56" aria-hidden="true"><i>6</i></span>
             </div>
 
-            <p class="anat__caption">
-              <span>Fig. 01 — Pigmentum 0.1, vista lateral com tampa</span>
-              <span>Fig. 02 — Ponta 0.1, ampliada</span>
-            </p>
+            <!-- régua 140 mm: linhas de extensão nas extremidades exatas da caneta (JS) -->
+            <div class="anat__ruler" data-part="5" aria-hidden="true">
+              <i class="anat__ruler-ext"></i>
+              <i class="anat__ruler-line"></i>
+            </div>
+
+            <!-- Fig. 01: logo abaixo da caneta/régua, alinhada à borda esquerda da caneta (JS) -->
+            <p class="anat__fig">Fig. 01 — Pigmentum 0.1, vista lateral com tampa</p>
 
             <ol class="anat__notes" aria-label="Anatomia da caneta">
-              <li class="note note--side" data-part="1" style="--lx:24.5;--ly:17"><span class="note__idx">/01</span><span class="note__mask"><span class="note__text">Ponta 0.1 <span class="u">mm</span><span class="note__sep"> · </span>Tubo metálico</span></span></li>
-              <li class="note note--down" data-part="2" style="--lx:28.72;--ly:69.5"><span class="note__idx">/02</span><span class="note__mask"><span class="note__text">Tampa + clipe em aço</span></span></li>
-              <li class="note note--up" data-part="3" style="--lx:42.4;--ly:16.5"><span class="note__idx">/03</span><span class="note__mask"><span class="note__text">Corpo em PP fosco</span></span></li>
-              <li class="note note--down" data-part="4" style="--lx:50;--ly:69.5"><span class="note__idx">/04</span><span class="note__mask"><span class="note__text">Centro de massa · 9 <span class="u">g</span></span></span></li>
-              <li class="note note--dim" data-part="5" style="--lx:50;--ly:88"><span class="note__idx">/05</span><span class="note__mask"><span class="note__text">140 <span class="u">mm</span> · ponta a ponta</span></span></li>
-              <li class="note note--up" data-part="6" style="--lx:74.32;--ly:16.5"><span class="note__idx">/06</span><span class="note__mask"><span class="note__text">Tinta pigmentada · preto</span></span></li>
+              <li class="note note--side" data-part="1" style="--lx:31;--ly:22.35"><span class="note__idx">/01</span><span class="note__mask"><span class="note__text">Ponta 0.1 <span class="u">mm</span><span class="note__sep"> · </span>Tubo metálico</span></span></li>
+              <li class="note note--down" data-part="2" style="--lx:28.72;--ly:79.4"><span class="note__idx">/02</span><span class="note__mask"><span class="note__text">Tampa + clipe em aço</span></span></li>
+              <li class="note note--up" data-part="3" style="--lx:42.4;--ly:27.9"><span class="note__idx">/03</span><span class="note__mask"><span class="note__text">Corpo em PP fosco</span></span></li>
+              <li class="note note--down" data-part="4" style="--lx:50;--ly:79.4"><span class="note__idx">/04</span><span class="note__mask"><span class="note__text">Centro de massa · 9 <span class="u">g</span></span></span></li>
+              <li class="note note--dim" data-part="5" style="--lx:50;--ly:90.6"><span class="note__idx">/05</span><span class="note__mask"><span class="note__text">140 <span class="u">mm</span> · ponta a ponta</span></span></li>
+              <li class="note note--up" data-part="6" style="--lx:74.32;--ly:27.9"><span class="note__idx">/06</span><span class="note__mask"><span class="note__text">Tinta pigmentada · preto</span></span></li>
             </ol>
 
-            <!-- Lupa: a ponta real (still-nib) ampliada e centralizada -->
+            <!-- Lupa: a ponta real (still-nib) ampliada; legenda logo abaixo, alinhada à borda direita -->
             <figure class="anat__loupe" data-part="1" data-cursor="Ver">
               <span class="anat__ring" aria-hidden="true"></span>
               <div class="anat__lens">
                 <img src="assets/img/still-nib.webp" width="1200" height="900" loading="lazy" decoding="async"
                      alt="Ponta 0.1 da caneta ampliada: fibra escura na extremidade, guiada por um tubo metálico fino que sai do cone branco." />
               </div>
-              <figcaption class="anat__loupe-cap">Fig. 02 — Ponta 0.1, ampliada</figcaption>
+              <figcaption class="anat__loupe-cap">Fig. 02 — <br />Ponta ampliada</figcaption>
             </figure>
           </div>
-
         </div>
 
+        <!-- Especificações em grade bento (DS: grade gap-px de 3.3 Cards + coluna de stats do hero v3).
+             Ordem de leitura = ordem do reveal: destaque → foto → menores → faixa. -->
         <dl class="specs" aria-label="Especificações" data-specs>
-          <div class="spec flashlight" data-part="1" data-reveal>
+          <div class="spec spec--ponta flashlight" data-part="1" data-reveal>
             <dt class="spec__top"><span>Ponta</span><span class="spec__idx" aria-hidden="true">/01</span></dt>
-            <dd><div class="spec__value">0.1<small>mm</small></div><p class="spec__desc">Fibra de alta densidade guiada por tubo metálico.</p></dd>
+            <dd>
+              <div class="spec__value"><span data-count="0.1" data-decimals="1">0.1</span><small>mm</small></div>
+              <p class="spec__desc">Fibra de alta densidade guiada por tubo metálico.</p>
+              <!-- diagrama técnico da ponta com cotas (a foto da ponta já está na lupa) -->
+              <svg class="spec__art nib" viewBox="0 0 420 150" fill="none" aria-hidden="true" data-viz>
+                <path class="nib__axis" d="M110 80H420" />
+                <path class="viz-line" pathLength="1" d="M420 41H344L300 65V95L344 119H420" />
+                <path class="viz-line" pathLength="1" d="M300 74H196V86H300" />
+                <path class="viz-line" pathLength="1" d="M196 77L162 78.5Q155 80 162 81.5L196 83" />
+                <path class="viz-line nib__dim" pathLength="1" d="M140 71V89M134 71H146M134 89H146" />
+                <path class="viz-line nib__dim" pathLength="1" d="M196 55H300M196 49V61M300 49V61" />
+                <path class="viz-line nib__dim" pathLength="1" d="M178 82V126H230" />
+                <text class="nib__txt" x="128" y="83" text-anchor="end">Ø 0.1 MM</text>
+                <text class="nib__txt" x="248" y="43" text-anchor="middle">TUBO DE AÇO</text>
+                <text class="nib__txt" x="236" y="129">FIBRA DE ALTA DENSIDADE</text>
+              </svg>
+            </dd>
           </div>
-          <div class="spec flashlight" data-part="2" data-reveal>
-            <dt class="spec__top"><span>Tampa</span><span class="spec__idx" aria-hidden="true">/02</span></dt>
-            <dd><div class="spec__value">Aço</div><p class="spec__desc">Clipe em aço que prende no caderno sem marcar a capa.</p></dd>
-          </div>
-          <div class="spec flashlight" data-part="3" data-reveal>
-            <dt class="spec__top"><span>Material</span><span class="spec__idx" aria-hidden="true">/03</span></dt>
-            <dd><div class="spec__value">PP fosco</div><p class="spec__desc">Polipropileno de toque seco, que não escorrega.</p></dd>
-          </div>
-          <div class="spec spec--context" data-reveal>
+
+          <div class="spec spec--photo" data-reveal>
             <dt class="spec__top"><span>Na sua mesa</span><span class="spec__idx" aria-hidden="true">Fig. 03</span></dt>
             <dd>
-              <figure class="context">
-                <div class="context__img">
-                  <img src="assets/img/pen-desk.webp" width="720" height="1280" loading="lazy" decoding="async"
+              <figure class="spec__figure">
+                <div class="media media--warm" data-clip data-cursor="Ver">
+                  <img src="assets/img/pen-desk.webp" width="720" height="1280" loading="lazy" decoding="async" data-parallax
                        alt="Caneta ARTOOLS Pigmentum sobre uma mesa de madeira, em diagonal." />
                 </div>
-                <figcaption class="context__cap">Fig. 03 — Sem filtro, na mesa de trabalho.</figcaption>
+                <figcaption class="spec__figcap">Fig. 03 — Pigmentum 0.1 no dia a dia</figcaption>
               </figure>
             </dd>
           </div>
-          <div class="spec flashlight" data-part="4" data-reveal>
+
+          <div class="spec spec--tampa flashlight" data-part="2" data-reveal>
+            <dt class="spec__top"><span>Tampa</span><span class="spec__idx" aria-hidden="true">/02</span></dt>
+            <dd><div class="spec__value">Aço</div><p class="spec__desc">Clipe em aço que prende no caderno sem marcar a capa.</p></dd>
+          </div>
+          <div class="spec spec--material flashlight" data-part="3" data-reveal>
+            <dt class="spec__top"><span>Material</span><span class="spec__idx" aria-hidden="true">/03</span></dt>
+            <dd><div class="spec__value">PP fosco</div><p class="spec__desc">Polipropileno de toque seco, que não escorrega.</p></dd>
+          </div>
+          <div class="spec spec--peso flashlight" data-part="4" data-reveal>
             <dt class="spec__top"><span>Peso</span><span class="spec__idx" aria-hidden="true">/04</span></dt>
-            <dd><div class="spec__value">9<small>g</small></div><p class="spec__desc">Centro de massa no meio do corpo: leve, sem pender.</p></dd>
+            <dd><div class="spec__value"><span data-count="9">9</span><small>g</small></div><p class="spec__desc">Centro de massa no meio do corpo: leve, sem pender.</p></dd>
           </div>
-          <div class="spec flashlight" data-part="5" data-reveal>
+          <div class="spec spec--comp flashlight" data-part="5" data-reveal>
             <dt class="spec__top"><span>Comprimento</span><span class="spec__idx" aria-hidden="true">/05</span></dt>
-            <dd><div class="spec__value">140<small>mm</small></div><p class="spec__desc">Proporção clássica de fineliner, cabe em qualquer estojo.</p></dd>
+            <dd>
+              <div class="spec__value"><span data-count="140">140</span><small>mm</small></div>
+              <p class="spec__desc">Proporção clássica de fineliner, cabe em qualquer estojo.</p>
+              <!-- régua 0–140 mm (marcas a cada 5 mm) -->
+              <svg class="spec__art ruler" viewBox="0 0 300 44" fill="none" aria-hidden="true" data-viz>
+                <path class="viz-line" pathLength="1" d="M10 32H290M10 32V20M20 32V26M30 32V20M40 32V26M50 32V20M60 32V26M70 32V20M80 32V26M90 32V20M100 32V26M110 32V20M120 32V26M130 32V20M140 32V26M150 32V20M160 32V26M170 32V20M180 32V26M190 32V20M200 32V26M210 32V20M220 32V26M230 32V20M240 32V26M250 32V20M260 32V26M270 32V20M280 32V26M290 32V20" />
+                <text class="nib__txt" x="10" y="12">0</text>
+                <text class="nib__txt" x="290" y="12" text-anchor="end">140 MM</text>
+              </svg>
+            </dd>
           </div>
-          <div class="spec flashlight" data-part="6" data-reveal>
+          <div class="spec spec--tinta flashlight" data-part="6" data-reveal>
             <dt class="spec__top"><span>Tinta</span><span class="spec__idx" aria-hidden="true">/06</span></dt>
-            <dd><div class="spec__value">Pigmento</div><p class="spec__desc">Preta, à base d’água, à prova d’água e resistente à luz.</p></dd>
+            <dd>
+              <div class="spec__main">
+                <div class="spec__value">Pigmento</div>
+                <p class="spec__desc">Preta, à base d’água, à prova d’água e resistente à luz.</p>
+              </div>
+              <svg class="spec__art drop" viewBox="0 0 80 100" fill="none" aria-hidden="true" data-viz>
+                <path class="viz-line" pathLength="1" d="M40 6C52 26 68 44 68 64A28 28 0 0 1 12 64C12 44 28 26 40 6Z" />
+                <path class="viz-line" pathLength="1" d="M24 66A16 16 0 0 0 40 82" />
+              </svg>
+              <!-- DS: dl.spec (ficha técnica mono) — renomeado .spec-list -->
+              <dl class="spec-list">
+                <div><dt>Base</dt><dd>Água</dd></div>
+                <div><dt>Água</dt><dd>À prova, depois de seca</dd></div>
+                <div><dt>Luz</dt><dd>Resistente</dd></div>
+                <div><dt>Cor</dt><dd>Preto</dd></div>
+              </dl>
+            </dd>
           </div>
         </dl>
       </div>
