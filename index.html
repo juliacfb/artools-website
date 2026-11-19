@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>ARTOOLS Precision Pen — A caneta mais tecnológica do mundo</title>
+  <meta name="description" content="A Artools Precision Pen redefine o equilíbrio entre peso, fluxo e design. Ponta de 0.1 mm, tinta pigmentada e equilíbrio perfeito para criadores que exigem precisão em cada traço." />
+  <meta name="theme-color" content="#EAEAE5" />
+  <meta property="og:title" content="ARTOOLS Precision Pen" />
+  <meta property="og:description" content="A caneta mais tecnológica do mundo. Ponta 0.1 mm, tinta pigmentada." />
+  <meta property="og:image" content="assets/img/og.jpg" />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%231C1917'/%3E%3Cpath d='M16 6l6 8-6 12-6-12z' fill='none' stroke='%23fff' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M16 14v7' stroke='%23fff' stroke-width='1.6'/%3E%3C/svg%3E" />
+
+  <!-- Tema antes da primeira pintura (evita flash) + flag de JS -->
+  <script>
+    (function () {
+      var d = document.documentElement, t = null;
+      d.classList.add('js');
+      try { t = localStorage.getItem('artools-theme'); } catch (e) {}
+      if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      d.setAttribute('data-theme', t);
+    })();
+  </script>
+
+  <!-- Fontes do DS: Inter (300–700) + JetBrains Mono (400–500) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- não bloqueante: o fallback métrico (Inter Fallback) segura o layout até a troca -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" /></noscript>
+
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="preload" as="image" href="assets/img/pen-hero.webp" fetchpriority="high" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body class="is-loading">
+  <a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+  <!-- ============ PRELOADER ============ -->
+  <div class="preloader" aria-hidden="true">
+    <div class="preloader__brand"><span>ARTOOLS — Precision Series</span><span>Edição 2026</span></div>
+    <div class="preloader__bottom">
+      <div class="preloader__count"><span class="js-load-count">0</span><sup>%</sup></div>
+      <div class="preloader__bar"><i></i></div>
+      <div class="preloader__meta"><span>Pigmentum · 0.1</span><span class="js-load-label">Preparando</span></div>
+    </div>
+  </div>
+
+  <div class="noise" aria-hidden="true"></div>
+
+  <!-- ============ CURSOR ============ -->
+  <div class="cursor" aria-hidden="true">
+    <div class="cursor__dot"></div>
+    <div class="cursor__ring"><span class="cursor__label"></span></div>
+  </div>
+
+  <!-- ============ HEADER ============ -->
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="ARTOOLS — voltar ao início">
+      <span class="brand__mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M12 2.5 18 11l-6 10.5L6 11Z" />
+          <path d="M12 11v6" />
+          <circle cx="12" cy="10" r="1.3" fill="currentColor" stroke="none" />
+        </svg>
+      </span>
+      <span class="brand__word">ARTOOLS</span>
+    </a>
+
+    <nav class="nav" aria-label="Principal">
+      <ul>
+        <li><a class="nav__link" href="#produto" data-nav="produto">Produto</a></li>
+        <li><a class="nav__link" href="#tecnologia" data-nav="tecnologia">Tecnologia</a></li>
+        <li><a class="nav__link" href="#beneficios" data-nav="beneficios">Benefícios</a></li>
+      </ul>
+    </nav>
+
+    <div class="header__actions">
+      <button class="theme-toggle" type="button" aria-label="Ativar tema escuro" aria-pressed="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <mask id="moon-mask">
+            <rect width="24" height="24" fill="#fff" />
+            <circle class="moon-bite" cx="30" cy="-6" r="7" fill="#000" />
+          </mask>
+          <circle class="sun-core" cx="12" cy="12" r="5" fill="currentColor" mask="url(#moon-mask)" />
+          <g class="rays" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <path d="M12 1.5v2.2M12 20.3v2.2M1.5 12h2.2M20.3 12h2.2M4.6 4.6l1.5 1.5M17.9 17.9l1.5 1.5M4.6 19.4l1.5-1.5M17.9 6.1l1.5-1.5" />
+          </g>
+        </svg>
+      </button>
+      <button class="burger" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="header__progress" aria-hidden="true"></div>
+  </header>
+
+  <nav class="mobile-menu" id="mobile-menu" aria-label="Menu móvel">
+    <a href="#produto">Produto <span>03</span></a>
+    <a href="#tecnologia">Tecnologia <span>04</span></a>
+    <a href="#beneficios">Benefícios <span>05</span></a>
+    <a href="#comprar">Comprar <span>06</span></a>
+  </nav>
+
+  <!-- ============ TRILHO DE SEÇÕES ============ -->
+  <aside class="rail" aria-label="Progresso da página">
+    <button class="rail__prev" type="button" aria-label="Ir para a seção anterior" aria-disabled="true">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M8 14V2M3 7l5-5 5 5" /></svg>
+      <span>Prev</span>
+    </button>
+    <div class="rail__track" aria-hidden="true"><span class="rail__fill"></span></div>
+    <div class="rail__count">
+      <span class="odo" aria-hidden="true">01</span>
+      <span class="rail__total" aria-hidden="true">/06</span>
+      <span class="sr-only js-section-status" aria-live="polite"></span>
+    </div>
+  </aside>
+
+  <main id="main" tabindex="-1">
+
+    <!-- =====================================================================
+         01 — HERO
+    ====================================================================== -->
+    <section class="hero" id="top" data-section="Início" aria-labelledby="hero-title">
+      <div class="hero__bg" aria-hidden="true">
+        <div class="guides"><span><i></i></span><span><i style="animation-delay:-11s"></i></span><span></span></div>
+      </div>
+
+      <div class="hero__inner container">
+        <div class="hero__copy">
+          <p class="eyebrow"><span class="eyebrow__dot" aria-hidden="true"></span>Precision Series</p>
+
+          <h1 class="hero__title" id="hero-title">
+            <span class="line"><span class="line__inner">A caneta</span></span>
+            <span class="line line--outline">
+              <span class="line__inner">
+                <span class="outline outline--ghost">mais tecnológica</span>
+                <span class="outline outline--ink" aria-hidden="true">mais tecnológica</span>
+                <span class="nib-caret" aria-hidden="true"></span>
+              </span>
+            </span>
+            <span class="line"><span class="line__inner">do mundo.</span></span>
+          </h1>
+
+          <p class="hero__lead">A Artools Precision Pen redefine o equilíbrio entre peso, fluxo e design. Feita para criadores que exigem perfeição em cada traço.</p>
+
+          <div class="hero__ctas">
+            <a class="btn btn--primary" href="#comprar" data-magnetic data-cursor="Comprar">
+              <span class="btn__fill" aria-hidden="true"></span>
+              <span class="btn__label">Comprar Agora</span>
+            </a>
+            <a class="btn btn--secondary" href="#filme" data-magnetic>
+              <span class="btn__fill" aria-hidden="true"></span>
+              <span class="btn__label">Explorar</span>
+              <span class="btn__icon arrow-loop" aria-hidden="true">
+                <svg viewBox="0 0 16 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2v13M3 10l5 5 5-5" /></svg>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Caneta: camada acima do texto (a linha em outline passa por trás) -->
+      <div class="hero__stage">
+        <div class="pen">
+          <div class="pen__intro">
+            <div class="pen__shadow" aria-hidden="true"></div>
+            <div class="pen__float">
+              <div class="pen__tilt">
+                <img class="pen__img" src="assets/img/pen-hero.webp" width="1446" height="783" fetchpriority="high" decoding="async"
+                     alt="Caneta ARTOOLS Pigmentum branca, ponta 0.1, flutuando em diagonal" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero__hint" aria-hidden="true"><i></i>Role para explorar</div>
+      <div class="hero__meta" aria-hidden="true">Pigmentum — Nº 0.1</div>
+    </section>
+
+    <!-- =====================================================================
+         02 — FILME (scroll scrub estilo Apple)
+    ====================================================================== -->
+    <section class="scrub" id="filme" data-section="Em movimento" aria-label="A caneta em ação">
+      <div class="scrub__sticky">
+        <div class="scrub__frame">
+          <canvas class="scrub__canvas" role="img"
+                  aria-label="Sequência em vídeo: a caneta ARTOOLS perde a tampa, revela a ponta 0.1, desce até um caderno aberto e escreve “Create something beautiful today”."></canvas>
+          <video class="scrub__video" muted playsinline preload="none" hidden aria-hidden="true"></video>
+          <div class="scrub__shade" aria-hidden="true"></div>
+        </div>
+
+        <div class="scrub__copy">
+          <article class="step step--a" data-in="0.05" data-out="0.25">
+            <span class="overline overline--xs">01 — Ponta</span>
+            <h2>Ponta de 0.1&nbsp;mm</h2>
+            <p>Fibra de alta densidade guiada por tubo metálico: linhas finas, nítidas e constantes do primeiro ao último traço.</p>
+          </article>
+          <article class="step step--b" data-in="0.28" data-out="0.46">
+            <span class="overline overline--xs">02 — Equilíbrio</span>
+            <h2>Equilíbrio perfeito</h2>
+            <p>Centro de massa calibrado para a mão descansar. A caneta trabalha — você só conduz.</p>
+          </article>
+          <article class="step step--c" data-in="0.50" data-out="0.72">
+            <span class="overline overline--xs">03 — Tinta</span>
+            <h2>Tinta de secagem instantânea</h2>
+            <p>Pigmento à base d’água que fixa no papel em segundos. Sem borrões, nem com marcador por cima.</p>
+          </article>
+          <article class="step step--d" data-in="0.80" data-out="2">
+            <span class="overline overline--xs">04 — Traço</span>
+            <h2>Crie algo bonito hoje.</h2>
+          </article>
+        </div>
+
+        <div class="scrub__hud" aria-hidden="true">
+          <span>Frame <span class="js-frame">001</span> / 240</span>
+          <span class="scrub__bar"><i></i></span>
+          <span class="scrub__loading js-scrub-loading">Buffer 0%</span>
+        </div>
+      </div>
+
+      <!-- Versão estática: prefers-reduced-motion ou sem JS -->
+      <div class="scrub__static">
+        <figure>
+          <img src="assets/frames/lg/frame_0030.webp" width="1920" height="1080" loading="lazy" alt="A tampa se solta e revela a ponta 0.1 da caneta." />
+          <figcaption><span class="overline overline--xs">01 — Ponta</span><h2>Ponta de 0.1&nbsp;mm</h2><p>Fibra de alta densidade guiada por tubo metálico: linhas finas, nítidas e constantes.</p></figcaption>
+        </figure>
+        <figure>
+          <img src="assets/frames/lg/frame_0090.webp" width="1920" height="1080" loading="lazy" alt="A caneta flutua na horizontal sobre um caderno aberto." />
+          <figcaption><span class="overline overline--xs">02 — Equilíbrio</span><h2>Equilíbrio perfeito</h2><p>Centro de massa calibrado para a mão descansar.</p></figcaption>
+        </figure>
+        <figure>
+          <img src="assets/frames/lg/frame_0150.webp" width="1920" height="1080" loading="lazy" alt="A ponta toca o papel e começa a escrever." />
+          <figcaption><span class="overline overline--xs">03 — Tinta</span><h2>Tinta de secagem instantânea</h2><p>Pigmento que fixa no papel em segundos, sem borrões.</p></figcaption>
+        </figure>
+        <figure>
+          <img src="assets/frames/lg/frame_0240.webp" width="1920" height="1080" loading="lazy" alt="No caderno, a frase escrita à mão: Create something beautiful today." />
+          <figcaption><span class="overline overline--xs">04 — Traço</span><h2>Crie algo bonito hoje.</h2></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Divisor de fluxo (DS v4) -->
+    <div class="flow-divider" aria-hidden="true">
+      <svg class="waves" preserveAspectRatio="none" viewBox="0 0 2000 72" fill="none">
+        <path class="wave-base" d="M0 36 C 150 6 150 66 300 36 S 450 6 600 36 S 750 66 900 36 S 1050 6 1200 36 S 1350 66 1500 36 S 1650 6 1800 36 S 1950 66 2100 36" stroke-width="1" />
+        <path class="wave-a" d="M0 36 C 150 6 150 66 300 36 S 450 6 600 36 S 750 66 900 36 S 1050 6 1200 36 S 1350 66 1500 36 S 1650 6 1800 36 S 1950 66 2100 36" stroke-width="1" transform="translate(0 6)" />
+      </svg>
+      <span class="sweep"></span>
+      <span class="flow-divider__label">03 — Produto</span>
+      <svg class="flow-divider__spark" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0l2.5 9.5L24 12l-9.5 2.5L12 24l-2.5-9.5L0 12l9.5-2.5z" /></svg>
+    </div>
+
+    <!-- =====================================================================
+         03 — PRODUTO
+    ====================================================================== -->
+    <section class="section" id="produto" data-section="Produto" aria-labelledby="produto-title">
+      <div class="frame">
+        <div class="guides" aria-hidden="true"><span><i></i></span><span><i style="animation-delay:-9s"></i></span><span></span></div>
+
+        <header class="sec-head">
+          <div class="sec-head__copy">
+            <span class="overline" data-reveal>03 / Produto</span>
+            <h2 class="sec-title" id="produto-title" data-split>Desenhada para o traço exato.</h2>
+            <p class="sec-lead" data-reveal>Cada componente da Pigmentum 0.1 existe por um motivo: dar à sua mão a mesma linha, sempre. Nada a mais, nada a menos.</p>
+          </div>
+          <div class="sec-head__num" aria-hidden="true"><span data-drift>03</span></div>
+        </header>
+
+        <!-- Anatomia: prancha técnica 16:9. Coordenadas em % da prancha; pontos em % da caneta.
+             Caneta: left 12% · top 37.25% · largura 76% (altura 17.51%, recorte 1574×204). -->
+        <div class="anat" data-anat>
+          <div class="anat__plate">
+            <span class="anat__reg anat__reg--tl" aria-hidden="true"></span>
+            <span class="anat__reg anat__reg--tr" aria-hidden="true"></span>
+            <span class="anat__reg anat__reg--bl" aria-hidden="true"></span>
+            <span class="anat__reg anat__reg--br" aria-hidden="true"></span>
+
+            <!-- linhas de anotação, eixo e cota (viewBox = proporção da prancha) -->
+            <svg class="anat__svg" viewBox="0 0 1600 900" preserveAspectRatio="none" fill="none" aria-hidden="true">
+              <path class="anat__axis" d="M64 414H1536" />
+              <path class="anat__ext" d="M192 496V810M1408 470V810" />
+              <path class="anat__line anat__dim" data-part="5" pathLength="1" d="M192 792H1408" />
+              <path class="anat__tick" data-part="5" pathLength="1" d="M192 780V804M1408 780V804" />
+              <path class="anat__line" data-part="1" pathLength="1" d="M206.6 401.4L219 280.3" />
+              <path class="anat__line" data-part="2" pathLength="1" d="M459.5 464.5V612" />
+              <path class="anat__line" data-part="3" pathLength="1" d="M678.4 382.5V162" />
+              <path class="anat__line" data-part="4" pathLength="1" d="M800 423.5V612" />
+              <path class="anat__line" data-part="6" pathLength="1" d="M1189.1 423.5V162" />
+            </svg>
+
+            <div class="anat__shadow" aria-hidden="true"></div>
+
+            <div class="anat__pen">
+              <img src="assets/img/pen-horizontal.webp" width="1574" height="204" loading="lazy" decoding="async"
+                   alt="Caneta ARTOOLS Pigmentum 0.1 em vista lateral: tampa branca com janela e clipe metálico à esquerda, corpo branco fosco com a marca ARTOOLS Pigmentum e a indicação 0.1 perto da extremidade traseira." />
+              <span class="anat__dot" data-part="1" style="--px:1.2;--py:42" aria-hidden="true"><i>1</i></span>
+              <span class="anat__dot" data-part="2" style="--px:22;--py:82" aria-hidden="true"><i>2</i></span>
+              <span class="anat__dot" data-part="3" style="--px:40;--py:30" aria-hidden="true"><i>3</i></span>
+              <span class="anat__dot" data-part="4" style="--px:50;--py:56" aria-hidden="true"><i>4</i></span>
+              <span class="anat__dot" data-part="5" style="--px:98.8;--py:45" aria-hidden="true"><i>5</i></span>
+              <span class="anat__dot" data-part="6" style="--px:82;--py:56" aria-hidden="true"><i>6</i></span>
+            </div>
+
+            <p class="anat__caption">
+              <span>Fig. 01 — Pigmentum 0.1, vista lateral com tampa</span>
+              <span>Fig. 02 — Ponta 0.1, ampliada</span>
+            </p>
+
+            <ol class="anat__notes" aria-label="Anatomia da caneta">
+              <li class="note note--side" data-part="1" style="--lx:24.5;--ly:17"><span class="note__idx">/01</span><span class="note__mask"><span class="note__text">Ponta 0.1 <span class="u">mm</span><span class="note__sep"> · </span>Tubo metálico</span></span></li>
+              <li class="note note--down" data-part="2" style="--lx:28.72;--ly:69.5"><span class="note__idx">/02</span><span class="note__mask"><span class="note__text">Tampa + clipe em aço</span></span></li>
+              <li class="note note--up" data-part="3" style="--lx:42.4;--ly:16.5"><span class="note__idx">/03</span><span class="note__mask"><span class="note__text">Corpo em PP fosco</span></span></li>
+              <li class="note note--down" data-part="4" style="--lx:50;--ly:69.5"><span class="note__idx">/04</span><span class="note__mask"><span class="note__text">Centro de massa · 9 <span class="u">g</span></span></span></li>
+              <li class="note note--dim" data-part="5" style="--lx:50;--ly:88"><span class="note__idx">/05</span><span class="note__mask"><span class="note__text">140 <span class="u">mm</span> · ponta a ponta</span></span></li>
+              <li class="note note--up" data-part="6" style="--lx:74.32;--ly:16.5"><span class="note__idx">/06</span><span class="note__mask"><span class="note__text">Tinta pigmentada · preto</span></span></li>
+            </ol>
+
+            <!-- Lupa: a ponta real (still-nib) ampliada e centralizada -->
+            <figure class="anat__loupe" data-part="1" data-cursor="Ver">
+              <span class="anat__ring" aria-hidden="true"></span>
+              <div class="anat__lens">
+                <img src="assets/img/still-nib.webp" width="1200" height="900" loading="lazy" decoding="async"
+                     alt="Ponta 0.1 da caneta ampliada: fibra escura na extremidade, guiada por um tubo metálico fino que sai do cone branco." />
+              </div>
+              <figcaption class="anat__loupe-cap">Fig. 02 — Ponta 0.1, ampliada</figcaption>
+            </figure>
+          </div>
+
+        </div>
+
+        <dl class="specs" aria-label="Especificações" data-specs>
+          <div class="spec flashlight" data-part="1" data-reveal>
+            <dt class="spec__top"><span>Ponta</span><span class="spec__idx" aria-hidden="true">/01</span></dt>
+            <dd><div class="spec__value">0.1<small>mm</small></div><p class="spec__desc">Fibra de alta densidade guiada por tubo metálico.</p></dd>
+          </div>
+          <div class="spec flashlight" data-part="2" data-reveal>
+            <dt class="spec__top"><span>Tampa</span><span class="spec__idx" aria-hidden="true">/02</span></dt>
+            <dd><div class="spec__value">Aço</div><p class="spec__desc">Clipe em aço que prende no caderno sem marcar a capa.</p></dd>
+          </div>
+          <div class="spec flashlight" data-part="3" data-reveal>
+            <dt class="spec__top"><span>Material</span><span class="spec__idx" aria-hidden="true">/03</span></dt>
+            <dd><div class="spec__value">PP fosco</div><p class="spec__desc">Polipropileno de toque seco, que não escorrega.</p></dd>
+          </div>
+          <div class="spec spec--context" data-reveal>
+            <dt class="spec__top"><span>Na sua mesa</span><span class="spec__idx" aria-hidden="true">Fig. 03</span></dt>
+            <dd>
+              <figure class="context">
+                <div class="context__img">
+                  <img src="assets/img/pen-desk.webp" width="720" height="1280" loading="lazy" decoding="async"
+                       alt="Caneta ARTOOLS Pigmentum sobre uma mesa de madeira, em diagonal." />
+                </div>
+                <figcaption class="context__cap">Fig. 03 — Sem filtro, na mesa de trabalho.</figcaption>
+              </figure>
+            </dd>
+          </div>
+          <div class="spec flashlight" data-part="4" data-reveal>
+            <dt class="spec__top"><span>Peso</span><span class="spec__idx" aria-hidden="true">/04</span></dt>
+            <dd><div class="spec__value">9<small>g</small></div><p class="spec__desc">Centro de massa no meio do corpo: leve, sem pender.</p></dd>
+          </div>
+          <div class="spec flashlight" data-part="5" data-reveal>
+            <dt class="spec__top"><span>Comprimento</span><span class="spec__idx" aria-hidden="true">/05</span></dt>
+            <dd><div class="spec__value">140<small>mm</small></div><p class="spec__desc">Proporção clássica de fineliner, cabe em qualquer estojo.</p></dd>
+          </div>
+          <div class="spec flashlight" data-part="6" data-reveal>
+            <dt class="spec__top"><span>Tinta</span><span class="spec__idx" aria-hidden="true">/06</span></dt>
+            <dd><div class="spec__value">Pigmento</div><p class="spec__desc">Preta, à base d’água, à prova d’água e resistente à luz.</p></dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- Marquee (DS) -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <div class="marquee__group">
+          <span class="marquee__item">Ponta 0.1 mm</span>
+          <svg class="marquee__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0l2.5 9.5L24 12l-9.5 2.5L12 24l-2.5-9.5L0 12l9.5-2.5z" /></svg>
+          <span class="marquee__item">Tinta pigmentada</span>
+          <span class="marquee__item">•</span>
+          <span class="marquee__item">À prova d’água</span>
+          <svg class="marquee__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0l2.5 9.5L24 12l-9.5 2.5L12 24l-2.5-9.5L0 12l9.5-2.5z" /></svg>
+          <span class="marquee__item">Precision Series · 2026</span>
+          <span class="marquee__item">•</span>
+        </div>
+        <div class="marquee__group">
+          <span class="marquee__item">Ponta 0.1 mm</span>
+          <svg class="marquee__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0l2.5 9.5L24 12l-9.5 2.5L12 24l-2.5-9.5L0 12l9.5-2.5z" /></svg>
+          <span class="marquee__item">Tinta pigmentada</span>
+          <span class="marquee__item">•</span>
+          <span class="marquee__item">À prova d’água</span>
+          <svg class="marquee__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0l2.5 9.5L24 12l-9.5 2.5L12 24l-2.5-9.5L0 12l9.5-2.5z" /></svg>
+          <span class="marquee__item">Precision Series · 2026</span>
+          <span class="marquee__item">•</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- =====================================================================
+         04 — TECNOLOGIA
+    ====================================================================== -->
+    <section class="section" id="tecnologia" data-section="Tecnologia" aria-labelledby="tec-title">
+      <div class="frame">
+        <div class="guides" aria-hidden="true"><span><i style="animation-delay:-4s"></i></span><span><i style="animation-delay:-17s"></i></span><span></span></div>
+
+        <header class="sec-head">
+          <div class="sec-head__copy">
+            <span class="overline" data-reveal>04 / Tecnologia</span>
+            <h2 class="sec-title" id="tec-title" data-split>Engenharia em escala de mícron.</h2>
+            <p class="sec-lead" data-reveal>Fluxo, pigmento e ponta foram projetados juntos. O resultado é uma linha que não muda — nem de espessura, nem de cor, nem com o tempo.</p>
+          </div>
+          <div class="sec-head__num" aria-hidden="true"><span data-drift>04</span></div>
+        </header>
+
+        <div class="stats">
+          <div class="stat" data-reveal>
+            <div class="stat__head"><span class="overline overline--xs">Traço</span><span class="spec__idx" aria-hidden="true">/01</span></div>
+            <svg class="stat__viz" viewBox="0 0 200 56" fill="none" aria-hidden="true" data-viz>
+              <path class="muted" d="M0 28H200" stroke-dasharray="2 4" />
+              <path class="viz-line" pathLength="1" d="M2 40 C 40 8, 70 8, 100 28 S 160 48, 198 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              <circle class="viz-dot" cx="198" cy="16" r="3" fill="currentColor" />
+            </svg>
+            <div>
+              <div class="stat__num"><span data-count="0.1" data-decimals="1">0.1</span><small>mm</small></div>
+              <p class="stat__label">Espessura do traço, constante em qualquer ângulo de escrita.</p>
+            </div>
+          </div>
+          <div class="stat" data-reveal>
+            <div class="stat__head"><span class="overline overline--xs">Secagem</span><span class="spec__idx" aria-hidden="true">/02</span></div>
+            <svg class="stat__viz" viewBox="0 0 200 56" aria-hidden="true" data-viz>
+              <g transform="translate(0 0)">
+                <circle cx="28" cy="28" r="24" fill="none" stroke-width="2" class="muted" />
+                <circle class="viz-gauge" cx="28" cy="28" r="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" pathLength="100" transform="rotate(-90 28 28)" data-val="30" />
+              </g>
+              <path class="muted" d="M70 28H200" stroke-dasharray="2 4" fill="none" />
+            </svg>
+            <div>
+              <div class="stat__num"><span>&lt;</span><span data-count="3">3</span><small>s</small></div>
+              <p class="stat__label">Para a tinta pigmentada fixar no papel.</p>
+            </div>
+          </div>
+          <div class="stat" data-reveal>
+            <div class="stat__head"><span class="overline overline--xs">Autonomia</span><span class="spec__idx" aria-hidden="true">/03</span></div>
+            <svg class="stat__viz" viewBox="0 0 200 56" aria-hidden="true" data-viz>
+              <rect class="viz-bar viz-bar--a" x="0" y="34" width="22" height="22" />
+              <rect class="viz-bar viz-bar--b" x="34" y="24" width="22" height="32" />
+              <rect class="viz-bar viz-bar--a" x="68" y="30" width="22" height="26" />
+              <rect class="viz-bar viz-bar--c" x="102" y="14" width="22" height="42" />
+              <rect class="viz-bar viz-bar--b" x="136" y="20" width="22" height="36" />
+              <rect class="viz-bar viz-bar--d" x="170" y="2" width="22" height="54" />
+            </svg>
+            <div>
+              <div class="stat__num"><span data-count="400">400</span><small>m</small></div>
+              <p class="stat__label">De linha contínua por carga de tinta.</p>
+            </div>
+          </div>
+          <div class="stat" data-reveal>
+            <div class="stat__head"><span class="overline overline--xs">Pigmento</span><span class="spec__idx" aria-hidden="true">/04</span></div>
+            <svg class="stat__viz" viewBox="0 0 200 56" fill="none" aria-hidden="true" data-viz>
+              <path class="muted" d="M0 28H200" stroke-width="2" />
+              <path class="viz-line" pathLength="1" d="M0 28H200" stroke="currentColor" stroke-width="2" />
+            </svg>
+            <div>
+              <div class="stat__num"><span data-count="100">100</span><small>%</small></div>
+              <p class="stat__label">Pigmento arquival: à prova d’água e resistente à luz.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="tech__feature">
+          <ol class="tech__list">
+            <li class="tech__item" data-reveal>
+              <span class="idx" aria-hidden="true">01</span>
+              <h3>Fluxo capilar regulado</h3>
+              <p>Um canal de alimentação calibrado entrega a mesma quantidade de tinta a cada milímetro — sem falhas, sem excesso.</p>
+              <span class="bar" aria-hidden="true"><i></i></span>
+            </li>
+            <li class="tech__item" data-reveal>
+              <span class="idx" aria-hidden="true">02</span>
+              <h3>Pigmento micronizado</h3>
+              <p>Partículas finas assentam na fibra do papel em vez de se espalhar: bordas nítidas e preto profundo.</p>
+              <span class="bar" aria-hidden="true"><i></i></span>
+            </li>
+            <li class="tech__item" data-reveal>
+              <span class="idx" aria-hidden="true">03</span>
+              <h3>Ponta com tubo metálico</h3>
+              <p>A fibra é guiada por um tubo de aço que preserva a geometria da ponta, mesmo com régua e esquadro.</p>
+              <span class="bar" aria-hidden="true"><i></i></span>
+            </li>
+          </ol>
+          <figure class="media media--wide" data-clip data-cursor="Ver" style="aspect-ratio:auto;min-height:24rem">
+            <img src="assets/img/still-writing.webp" width="1600" height="900" loading="lazy" decoding="async" data-parallax
+                 alt="A caneta escreve à mão, num caderno de esboços, a frase “Create something beautiful today”." />
+            <figcaption>Fig. 04 — Traço contínuo sobre papel pontilhado</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <div class="flow-divider" aria-hidden="true">
+      <svg class="waves" preserveAspectRatio="none" viewBox="0 0 2000 72" fill="none">
+        <path class="wave-base" d="M0 36 C 150 6 150 66 300 36 S 450 6 600 36 S 750 66 900 36 S 1050 6 1200 36 S 1350 66 1500 36 S 1650 6 1800 36 S 1950 66 2100 36" stroke-width="1" />
+        <path class="wave-a" d="M0 36 C 150 6 150 66 300 36 S 450 6 600 36 S 750 66 900 36 S 1050 6 1200 36 S 1350 66 1500 36 S 1650 6 1800 36 S 1950 66 2100 36" stroke-width="1" transform="translate(0 6)" />
+      </svg>
+      <span class="sweep"></span>
+      <span class="flow-divider__label">05 — Benefícios</span>
+      <svg class="flow-divider__spark" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0l2.5 9.5L24 12l-9.5 2.5L12 24l-2.5-9.5L0 12l9.5-2.5z" /></svg>
+    </div>
+
+    <!-- =====================================================================
+         05 — BENEFÍCIOS
+    ====================================================================== -->
+    <section class="section" id="beneficios" data-section="Benefícios" aria-labelledby="ben-title">
+      <div class="frame">
+        <header class="sec-head">
+          <div class="sec-head__copy">
+            <span class="overline" data-reveal>05 / Benefícios</span>
+            <h2 class="sec-title" id="ben-title" data-split>O que muda no seu traço.</h2>
+            <p class="sec-lead" data-reveal>Seis motivos para a Pigmentum 0.1 virar a primeira caneta do estojo — do rascunho ao arte-final.</p>
+          </div>
+          <div class="sec-head__num" aria-hidden="true"><span data-drift>05</span></div>
+        </header>
+
+        <div class="benefits__rail" tabindex="0" role="region" aria-label="Benefícios — role na horizontal ou arraste" data-cursor="Arraste" data-lenis-prevent-horizontal>
+          <article class="card flashlight">
+            <div class="card__top">
+              <span class="card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path class="draw" pathLength="1" d="M2.5 13c2.5-6 5-6 7.5 0s5 6 7.5 0c1-2.4 2-3.6 4-3.6" /></svg></span>
+              <span class="card__idx">01</span>
+            </div>
+            <div><h3>Traço constante</h3><p>A mesma espessura do primeiro rabisco ao último detalhe, sem engrossar com a pressão.</p><span class="card__more"><i></i>Fluxo regulado</span></div>
+          </article>
+          <article class="card flashlight">
+            <div class="card__top">
+              <span class="card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path class="draw" pathLength="1" d="M12 2.8c3.7 4.6 6.2 7.8 6.2 10.9a6.2 6.2 0 0 1-12.4 0c0-3.1 2.5-6.3 6.2-10.9Z" /><path class="draw" pathLength="1" d="m9.3 14 1.9 1.9 3.6-3.8" /></svg></span>
+              <span class="card__idx">02</span>
+            </div>
+            <div><h3>À prova d’água</h3><p>Depois de seca, a tinta não sai com água nem borra sob aquarela ou marcador.</p><span class="card__more"><i></i>Pigmento selado</span></div>
+          </article>
+          <article class="card flashlight">
+            <div class="card__top">
+              <span class="card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path class="draw" pathLength="1" d="M6 2.8h8l4 4v14.4H6Z" /><path class="draw" pathLength="1" d="M14 2.8v4h4M9 12.5h6M9 16h4" /></svg></span>
+              <span class="card__idx">03</span>
+            </div>
+            <div><h3>Qualidade arquival</h3><p>Pigmento resistente à luz: seus cadernos continuam pretos daqui a muitos anos.</p><span class="card__more"><i></i>Não desbota</span></div>
+          </article>
+          <article class="card flashlight">
+            <div class="card__top">
+              <span class="card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path class="draw" pathLength="1" d="M20.5 3.5c-8.5 0-14.5 6-14.5 14.5v2.5h2.5C17 20.5 20.5 12 20.5 3.5Z" /><path class="draw" pathLength="1" d="M6 20.5 15 11" /></svg></span>
+              <span class="card__idx">04</span>
+            </div>
+            <div><h3>Leve na mão</h3><p>9 g bem distribuídos e corpo fosco que não escorrega em sessões longas.</p><span class="card__more"><i></i>Ergonomia</span></div>
+          </article>
+          <article class="card flashlight">
+            <div class="card__top">
+              <span class="card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path class="draw" pathLength="1" d="m12 3-9 5 9 5 9-5Z" /><path class="draw" pathLength="1" d="m3 13 9 5 9-5" /></svg></span>
+              <span class="card__idx">05</span>
+            </div>
+            <div><h3>Combina com tudo</h3><p>Funciona sobre papel pontilhado, sulfite, Canson e por baixo de marcadores à base de álcool.</p><span class="card__more"><i></i>Multissuperfície</span></div>
+          </article>
+          <article class="card flashlight">
+            <div class="card__top">
+              <span class="card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path class="draw" pathLength="1" d="M3 17 17 3l4 4L7 21Z" /><path class="draw" pathLength="1" d="m7 13 2 2m1-5 2 2m1-5 2 2" /></svg></span>
+              <span class="card__idx">06</span>
+            </div>
+            <div><h3>Precisão de régua</h3><p>A ponta com tubo metálico desliza junto à régua sem perder o formato.</p><span class="card__more"><i></i>Desenho técnico</span></div>
+          </article>
+        </div>
+
+        <div class="benefits__foot">
+          <span class="overline overline--xs">Arraste ou use as setas</span>
+          <span class="benefits__progress" aria-hidden="true"><i></i></span>
+          <div class="benefits__btns">
+            <button class="icon-btn" type="button" data-rail="-1" aria-label="Benefício anterior"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M14 8H2m5-5L2 8l5 5" /></svg></button>
+            <button class="icon-btn" type="button" data-rail="1" aria-label="Próximo benefício"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" /></svg></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         06 — CTA FINAL + FOOTER
+    ====================================================================== -->
+    <section class="finale" id="comprar" data-section="Comprar" aria-labelledby="cta-title">
+      <div class="finale__glow" aria-hidden="true"></div>
+      <div class="finale__cta">
+        <span class="overline" data-reveal>06 / Comece agora</span>
+        <h2 class="finale__title" id="cta-title" data-split>Cada traço,<br /><span class="text-chrome">exato.</span></h2>
+        <p class="finale__sub" data-reveal>Precision Pen Pigmentum 0.1. Entrega para todo o Brasil e troca garantida em 30 dias.</p>
+        <div data-reveal>
+        <div class="beam" data-magnetic>
+          <span class="beam__glow" aria-hidden="true"></span>
+          <a class="btn" href="#comprar" data-cursor="Comprar">
+            <span class="beam__ring" aria-hidden="true"></span>
+            <span class="beam__core">
+              <span class="btn__fill" aria-hidden="true"></span>
+              <span class="btn__label">Comprar Agora</span>
+              <span class="btn__icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8h12M9 3l5 5-5 5" /></svg></span>
+            </span>
+          </a>
+        </div>
+        </div>
+        <div class="finale__links" data-reveal>
+          <a class="link-draw" href="#produto">Ver especificações</a>
+          <a class="link-draw" href="#filme">Rever o filme</a>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <div class="footer__grid">
+          <div>
+            <a class="brand" href="#top" aria-label="ARTOOLS — voltar ao início">
+              <span class="brand__mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M12 2.5 18 11l-6 10.5L6 11Z" /><path d="M12 11v6" /><circle cx="12" cy="10" r="1.3" fill="currentColor" stroke="none" /></svg></span>
+              <span class="brand__word">ARTOOLS</span>
+            </a>
+            <p class="footer__about">Instrumentos de desenho para quem leva cada linha a sério. Precision Series · 2026.</p>
+          </div>
+          <div>
+            <h3 class="footer__h">Explorar</h3>
+            <ul>
+              <li><a class="link-draw" href="#produto">Produto</a></li>
+              <li><a class="link-draw" href="#tecnologia">Tecnologia</a></li>
+              <li><a class="link-draw" href="#beneficios">Benefícios</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="footer__h">Suporte</h3>
+            <ul>
+              <li><a class="link-draw" href="#comprar">Envio e trocas</a></li>
+              <li><a class="link-draw" href="#comprar">Garantia</a></li>
+              <li><a class="link-draw" href="#comprar">Contato</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="footer__h">Social</h3>
+            <ul>
+              <li><a class="link-draw" href="#comprar">Instagram</a></li>
+              <li><a class="link-draw" href="#comprar">Pinterest</a></li>
+              <li><a class="link-draw" href="#comprar">YouTube</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer__legal">
+          <span>© 2026 ARTOOLS. Todos os direitos reservados.</span>
+          <span>Feito com papel, tinta e tempo.</span>
+        </div>
+        <div class="footer__word" aria-hidden="true"><span>A</span><span>R</span><span>T</span><span>O</span><span>O</span><span>L</span><span>S</span></div>
+      </footer>
+    </section>
+  </main>
+
+  <!-- Bibliotecas (versões fixadas) -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.27/dist/lenis.min.js" defer></script>
+  <script src="js/main.js" defer></script>
+</body>
+</html>
