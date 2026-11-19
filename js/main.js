@@ -804,6 +804,126 @@
   }
 
   /* ------------------------------------------------------------------------
+     9c. MARQUEE — loop contínuo (direita → esquerda), sem buraco em nenhuma largura
+     ------------------------------------------------------------------------ */
+  function initMarquee() {
+    const track = $('.marquee__track');
+    if (!track) return;
+    const source = $('.marquee__group', track);
+    const SECONDS_PER_GROUP = 40;   // mesma velocidade de antes (40s por grupo)
+    let tween = null, lastW = 0;
+
+    function build() {
+      const progress = tween ? tween.progress() : 0;
+      if (tween) tween.kill();
+      // descarta grupos extras (do HTML ou de builds anteriores) — nunca acumula clones
+      $$('.marquee__group', track).forEach(g => { if (g !== source) g.remove(); });
+      const groupW = source.getBoundingClientRect().width;
+      if (!groupW) return;
+      // largura total ≥ 2× a viewport + 1 grupo de folga
+      const count = Math.ceil((innerWidth * 2) / groupW) + 1;
+      for (let i = 1; i < count; i++) {
+        const clone = source.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        track.appendChild(clone);
+      }
+      gsap.set(track, { x: 0 });
+      if (REDUCED) return;            // parada, mas preenchendo a largura toda
+      // 0 → −1 grupo: ao repetir, o grupo seguinte está exatamente onde o primeiro estava
+      tween = gsap.fromTo(track, { x: 0 }, {
+        x: -groupW, duration: SECONDS_PER_GROUP, ease: 'none', repeat: -1,
+      });
+      tween.progress(progress);       // resize não "pula" o loop
+    }
+
+    document.fonts.ready.then(() => { lastW = innerWidth; build(); });
+    let t;
+    window.addEventListener('resize', () => {
+      clearTimeout(t);
+      t = setTimeout(() => { if (innerWidth !== lastW) { lastW = innerWidth; build(); } }, 150);
+    });
+  }
+
+  /* ------------------------------------------------------------------------
+     9d. DIVISORES DE FLUXO — onda com comprimento fixo (sem esticar) + sweep
+     ------------------------------------------------------------------------ */
+  function initFlowDividers() {
+    const dividers = $$('.flow-divider');
+    if (!dividers.length) return;
+    // Valores medidos no layout anterior em ~1440px: período 600u × 1.0125 = 607.5px,
+    // velocidade 600px / 12s = 50px/s, meia-onda com controles no meio (y 6 ↑ / 66 ↓), eixo y 36.
+    const L = 607.5, H = 72, MID = 36, UP = 6, DOWN = 66, SPEED = 50;
+    const SWEEP_DUR = 6;                       // mesma cadência do sweep anterior (6s, ease-out-expo)
+    const wavePath = width => {
+      const half = L / 2;
+      let d = `M0 ${MID}`;
+      for (let x = 0, up = true; x < width; x += half, up = !up) {
+        const m = x + half / 2, y = up ? UP : DOWN;
+        d += ` C${m} ${y} ${m} ${y} ${x + half} ${MID}`;
+      }
+      return d;
+    };
+    const state = new Map();
+    let lastW = 0;
+
+    // Tracejado da .wave-a: o ciclo (6 traço + 10 vão = 16px) precisa caber um número inteiro
+    // de vezes no comprimento de arco de UMA onda; senão o padrão "pula" quando o loop recomeça.
+    const probeSvg = $('.flow-divider svg.waves');
+    const probe = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    probe.setAttribute('d', wavePath(L));                    // exatamente um período
+    probeSvg.appendChild(probe);
+    const arc = probe.getTotalLength();
+    probe.remove();
+    const DASH = arc / Math.max(1, Math.round(arc / 16));    // ≈ 16px, divisor exato do período
+    const MARCH_DUR = 1.6 * DASH / 16;                       // mesma velocidade da marcha anterior (16px / 1.6s)
+
+    function build(div) {
+      const prev = state.get(div) || {};
+      const waveP = prev.wave ? prev.wave.progress() : 0;
+      const sweepP = prev.sweep ? prev.sweep.progress() : 0;
+      if (prev.wave) prev.wave.kill();
+      if (prev.sweep) prev.sweep.kill();
+      if (prev.march) prev.march.kill();
+
+      const svg = $('svg.waves', div), group = $('.waves__g', svg), sweep = $('.sweep', div);
+      const W = div.clientWidth;
+      const total = Math.ceil((W + 2 * L) / L) * L;          // largura + 2 ondas de folga, múltiplo de L
+      svg.setAttribute('viewBox', `0 0 ${total} ${H}`);
+      svg.setAttribute('width', total);
+      svg.setAttribute('height', H);
+      svg.style.width = `${total}px`;
+      const d = wavePath(total);
+      $$('path', group).forEach(p => p.setAttribute('d', d)); // .wave-a mantém translate(0 6)
+      const dashed = $('.wave-a', group);
+      dashed.style.strokeDasharray = `${(DASH * 6) / 16} ${(DASH * 10) / 16}`;
+      gsap.set(group, { x: 0 });
+
+      if (REDUCED) {                                          // parada, preenchendo a largura; sem sweep
+        gsap.set(sweep, { autoAlpha: 0 });
+        state.set(div, {});
+        return;
+      }
+      // x: 0 → −1 onda: ao repetir, o desenho é idêntico (padrão periódico em L)
+      const wave = gsap.fromTo(group, { x: 0 }, { x: -L, duration: L / SPEED, ease: 'none', repeat: -1 });
+      // sweep: entra fora da tela à direita, sai fora da tela à esquerda
+      const sweepTween = gsap.fromTo(sweep, { x: W }, { x: -sweep.offsetWidth, duration: SWEEP_DUR, ease: EXPO, repeat: -1 });
+      // marcha do tracejado (antes em CSS): mesmo sentido e velocidade, ciclo casado com o período
+      const march = gsap.fromTo(dashed, { strokeDashoffset: 0 }, { strokeDashoffset: -DASH, duration: MARCH_DUR, ease: 'none', repeat: -1 });
+      wave.progress(waveP);
+      sweepTween.progress(sweepP);
+      state.set(div, { wave, sweep: sweepTween, march });
+    }
+
+    lastW = innerWidth;
+    dividers.forEach(build);
+    let t;
+    window.addEventListener('resize', () => {
+      clearTimeout(t);
+      t = setTimeout(() => { if (innerWidth !== lastW) { lastW = innerWidth; dividers.forEach(build); } }, 150);
+    });
+  }
+
+  /* ------------------------------------------------------------------------
      10. TRILHO — progresso, PREV e contador odômetro
      ------------------------------------------------------------------------ */
   function initRail() {
@@ -1018,6 +1138,8 @@
     initButtons();
     initCursor();
     initBenefits();
+    initMarquee();
+    initFlowDividers();
     // o pin do filme precisa existir ANTES dos triggers abaixo dele (eles somam o pin-spacer)
     initScrub();
     initAnatomy();     // 2º pin da página: também antes dos triggers do trilho

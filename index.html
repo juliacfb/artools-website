@@ -245,9 +245,12 @@
 
     <!-- Divisor de fluxo (DS v4) -->
     <div class="flow-divider" aria-hidden="true">
-      <svg class="waves" preserveAspectRatio="none" viewBox="0 0 2000 72" fill="none">
-        <path class="wave-base" d="M0 36 C 150 6 150 66 300 36 S 450 6 600 36 S 750 66 900 36 S 1050 6 1200 36 S 1350 66 1500 36 S 1650 6 1800 36 S 1950 66 2100 36" stroke-width="1" />
-        <path class="wave-a" d="M0 36 C 150 6 150 66 300 36 S 450 6 600 36 S 750 66 900 36 S 1050 6 1200 36 S 1350 66 1500 36 S 1650 6 1800 36 S 1950 66 2100 36" stroke-width="1" transform="translate(0 6)" />
+      <!-- ondas: o JS (initFlowDividers) gera o d com comprimento de onda fixo e anima o <g> -->
+      <svg class="waves" width="2000" height="72" viewBox="0 0 2000 72" fill="none">
+        <g class="waves__g">
+          <path class="wave-base" d="M0 36 C 150 6 150 66 300 36 S 450 6 600 36 S 750 66 900 36 S 1050 6 1200 36 S 1350 66 1500 36 S 1650 6 1800 36 S 1950 66 2100 36" stroke-width="1" />
+          <path class="wave-a" d="M0 36 C 150 6 150 66 300 36 S 450 6 600 36 S 750 66 900 36 S 1050 6 1200 36 S 1350 66 1500 36 S 1650 6 1800 36 S 1950 66 2100 36" stroke-width="1" transform="translate(0 6)" />
+        </g>
       </svg>
       <span class="sweep"></span>
       <span class="flow-divider__label">03 — Produto</span>
@@ -501,9 +504,12 @@
     </section>
 
     <div class="flow-divider" aria-hidden="true">
-      <svg class="waves" preserveAspectRatio="none" viewBox="0 0 2000 72" fill="none">
-        <path class="wave-base" d="M0 36 C 150 6 150 66 300 36 S 450 6 600 36 S 750 66 900 36 S 1050 6 1200 36 S 1350 66 1500 36 S 1650 6 1800 36 S 1950 66 2100 36" stroke-width="1" />
-        <path class="wave-a" d="M0 36 C 150 6 150 66 300 36 S 450 6 600 36 S 750 66 900 36 S 1050 6 1200 36 S 1350 66 1500 36 S 1650 6 1800 36 S 1950 66 2100 36" stroke-width="1" transform="translate(0 6)" />
+      <!-- ondas: o JS (initFlowDividers) gera o d com comprimento de onda fixo e anima o <g> -->
+      <svg class="waves" width="2000" height="72" viewBox="0 0 2000 72" fill="none">
+        <g class="waves__g">
+          <path class="wave-base" d="M0 36 C 150 6 150 66 300 36 S 450 6 600 36 S 750 66 900 36 S 1050 6 1200 36 S 1350 66 1500 36 S 1650 6 1800 36 S 1950 66 2100 36" stroke-width="1" />
+          <path class="wave-a" d="M0 36 C 150 6 150 66 300 36 S 450 6 600 36 S 750 66 900 36 S 1050 6 1200 36 S 1350 66 1500 36 S 1650 6 1800 36 S 1950 66 2100 36" stroke-width="1" transform="translate(0 6)" />
+        </g>
       </svg>
       <span class="sweep"></span>
       <span class="flow-divider__label">05 — Benefícios</span>
