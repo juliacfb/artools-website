@@ -137,8 +137,13 @@
   --sp-24: 6rem;
   --sp-28: 7rem;
   --sp-40: 10rem;
-  --container: 1400px;      /* max-w-[1400px] · border-x */
-  --gutter: var(--sp-6);    /* px-6 */
+  --container: 1400px;      /* max-w-[1400px] · border-x — mantido só para o filme */
+  /* Grade única (header, hero, seções, footer): margem lateral fluida + limite alto.
+     --inset (por elemento full-bleed): max(var(--gutter), calc((100% - var(--grid-max)) / 2)) */
+  --gutter: clamp(1.5rem, 4vw, 6rem);    /* derivado: px-6 no mobile, cresce com a tela */
+  --grid-max: 2200px;                    /* derivado: largura útil máxima em monitores muito largos */
+  --pad-cell: min(2rem, var(--gutter)); /* recuo interno das células (DS p-8); o .frame sai por ele */
+  --gutter-film: var(--sp-6);            /* gutter antigo, congelado para o filme e os divisores */
   --pad-section: clamp(var(--sp-8), 4vw, var(--sp-12));  /* p-8 → md:p-12 */
   --header-h: 4.25rem;      /* ~68px (py-20) */
 
@@ -288,17 +293,17 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
    ========================================================================== */
 .container {
   width: 100%;
-  max-width: var(--container);
-  margin-inline: auto;
-  padding-inline: var(--gutter);
+  padding-inline: max(var(--gutter), calc((100% - var(--grid-max)) / 2));
 }
-@media (min-width: 768px) { :root { --gutter: var(--sp-12); } }
+/* ≥768: o gutter nunca é menor que o trilho lateral (PREV + contador) + respiro */
+@media (min-width: 768px) { :root { --gutter: clamp(6rem, 4vw, 7rem); --gutter-film: var(--sp-12); } }
 
-/* Moldura arquitetônica do DS: container 1400 · border-x · guias 3/6/3 */
+/* Moldura arquitetônica do DS: border-x · guias 3/6/3. Ocupa a largura útil inteira:
+   as bordas ficam --pad-cell para fora da linha do gutter, então o texto das células
+   cai exatamente na linha do logo (esquerda) e do botão de tema (direita). */
 .frame {
   position: relative;
-  max-width: var(--container);
-  margin-inline: auto;
+  margin-inline: calc(max(var(--gutter), calc((100% - var(--grid-max)) / 2)) - var(--pad-cell));
   border-inline: 1px solid var(--line);
 }
 .guides {
@@ -327,11 +332,11 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
   border-bottom: 1px solid var(--line);
   background: var(--bg-band);
 }
-.sec-head__copy { padding: var(--pad-section); position: relative; z-index: 1; }
+.sec-head__copy { padding: var(--pad-section) var(--pad-cell); position: relative; z-index: 1; }
 .sec-head__num {
   display: none;
   align-items: flex-end; justify-content: flex-end;
-  padding: var(--pad-section); overflow: hidden;
+  padding: var(--pad-section) var(--pad-cell); overflow: hidden;
 }
 .sec-head__num span {
   font-size: 10rem; line-height: 1; font-weight: 600; letter-spacing: var(--tr-tighter);
@@ -424,7 +429,7 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
   position: fixed; inset: 0 0 auto 0; z-index: var(--z-header);
   height: var(--header-h);
   display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
-  padding-inline: var(--gutter);
+  padding-inline: max(var(--gutter), calc((100% - var(--grid-max)) / 2));
   background: var(--header-bg);
   -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--line);
@@ -743,7 +748,7 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
 
 .hero__hint {
   position: absolute; z-index: var(--z-over);
-  left: var(--gutter); bottom: var(--sp-6);
+  left: max(var(--gutter), calc((100% - var(--grid-max)) / 2)); bottom: var(--sp-6);
   display: flex; align-items: center; gap: var(--sp-3);
   font-family: var(--font-mono); font-size: var(--fs-overline); letter-spacing: var(--tr-overline);
   text-transform: uppercase; color: var(--text-2);
@@ -752,7 +757,7 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
 .hero__hint i::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 40%; background: var(--text); animation: hintDrop 2.2s var(--ease-out) infinite; }
 .hero__meta {
   position: absolute; z-index: var(--z-over);
-  right: calc(var(--gutter) + 4rem); bottom: var(--sp-6);
+  right: max(var(--gutter), calc((100% - var(--grid-max)) / 2)); bottom: var(--sp-6);
   font-family: var(--font-mono); font-size: var(--fs-overline); letter-spacing: var(--tr-overline);
   text-transform: uppercase; color: var(--text-2);
 }
@@ -775,7 +780,7 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
 .scrub__copy {
   position: absolute; inset: var(--header-h) 0 0 0;
   max-width: var(--container); margin-inline: auto;
-  padding: var(--sp-8) var(--gutter);
+  padding: var(--sp-8) var(--gutter-film);
   display: grid; grid-template-columns: repeat(12, 1fr); grid-template-rows: 1fr 1fr;
   pointer-events: none;
   color: var(--stone-900);
@@ -810,7 +815,7 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
 
 .scrub__hud {
   position: absolute; left: 0; right: 0; bottom: var(--sp-6);
-  max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter);
+  max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter-film);
   display: flex; justify-content: space-between; align-items: center; gap: var(--sp-6);
   font-family: var(--font-mono); font-size: var(--fs-overline); letter-spacing: var(--tr-overline);
   text-transform: uppercase; color: var(--stone-600);
@@ -852,7 +857,7 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
    O SVG usa viewBox 1600×900 (mesma proporção), então linhas e rótulos nunca se desalinham. */
 .anat {
   position: relative;
-  padding: var(--sp-10) var(--gutter) var(--sp-10);
+  padding: var(--sp-10) var(--pad-cell) var(--sp-10);
   border-bottom: 1px solid var(--line);
 }
 .anat__plate { position: relative; }
@@ -1015,6 +1020,11 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
   text-transform: uppercase; line-height: 1.6; color: var(--text-2);
 }
 @media (min-width: 1024px) { .spec--context { grid-row: span 2; } }
+/* ≥2400px: as 6 specs + o contexto numa única linha (cards ~320px, sem esticar) */
+@media (min-width: 2400px) {
+  .specs { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+  .spec--context { grid-row: auto; order: 1; }
+}
 @media (max-width: 1023px) {
   .spec--context { grid-column: 1 / -1; order: 1; }
   .context { flex-direction: row; align-items: flex-end; }
@@ -1023,7 +1033,7 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
 .spec {
   position: relative; overflow: hidden;
   display: flex; flex-direction: column; justify-content: space-between; gap: var(--sp-8);
-  min-height: 13rem; padding: var(--sp-6);
+  min-height: 13rem; padding: var(--sp-6) var(--pad-cell);
   background: var(--bg);
   transition: background-color var(--d-base) var(--ease-out);
 }
@@ -1034,7 +1044,7 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
 .spec__value { font-size: var(--fs-h3); font-weight: 500; letter-spacing: var(--tr-tighter); line-height: 1; color: var(--text); transition: transform var(--d-base) var(--ease-out); }
 .spec__value small { font-size: .45em; letter-spacing: 0; color: var(--text-2); margin-left: .15em; font-weight: 400; }
 .spec:hover .spec__value { transform: translateX(.5rem); }
-.spec__desc { margin-top: var(--sp-2); font-size: var(--fs-sm); line-height: var(--lh-relaxed); color: var(--text-2); }
+.spec__desc { margin-top: var(--sp-2); max-width: 40ch; font-size: var(--fs-sm); line-height: var(--lh-relaxed); color: var(--text-2); }
 
 /* Flashlight (DS: radial que segue o mouse + trace border) */
 .flashlight::before {
@@ -1077,11 +1087,11 @@ html:not(.js) .flow-divider .wave-a { animation: march 1.6s linear infinite; }
 html:not(.js) .flow-divider svg.waves { width: calc(100% + 600px); animation: waveShift 12s linear infinite; }
 html:not(.js) .flow-divider .sweep { animation: sweepLine 6s var(--ease-out) infinite; }
 .flow-divider__label {
-  position: absolute; z-index: 1; left: var(--gutter); top: 50%; transform: translateY(-50%);
+  position: absolute; z-index: 1; left: var(--gutter-film); top: 50%; transform: translateY(-50%);
   padding-inline: var(--sp-2); background: var(--bg);
   font-family: var(--font-mono); font-size: var(--fs-overline); letter-spacing: var(--tr-overline); text-transform: uppercase; color: var(--text-2);
 }
-.flow-divider__spark { position: absolute; z-index: 1; right: var(--gutter); top: 50%; width: 1rem; height: 1rem; margin-top: -.5rem; color: var(--text); animation: spin 14s linear infinite; }
+.flow-divider__spark { position: absolute; z-index: 1; right: var(--gutter-film); top: 50%; width: 1rem; height: 1rem; margin-top: -.5rem; color: var(--text); animation: spin 14s linear infinite; }
 
 /* ---------- 5.4 TECNOLOGIA ---------- */
 .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-bottom: 1px solid var(--line); }
@@ -1089,7 +1099,7 @@ html:not(.js) .flow-divider .sweep { animation: sweepLine 6s var(--ease-out) inf
 .stat {
   position: relative; overflow: hidden;
   display: flex; flex-direction: column; justify-content: space-between; gap: var(--sp-8);
-  min-height: 20rem; padding: var(--sp-8);
+  min-height: 20rem; padding: var(--sp-8) var(--pad-cell);
   border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
   transition: background-color var(--d-base) var(--ease-out);
 }
@@ -1121,7 +1131,7 @@ html:not(.js) .flow-divider .sweep { animation: sweepLine 6s var(--ease-out) inf
 @media (min-width: 1024px) { .tech__list { border-bottom: 0; border-right: 1px solid var(--line); } }
 .tech__item {
   display: grid; grid-template-columns: auto 1fr; gap: var(--sp-2) var(--sp-6);
-  padding: var(--sp-8) var(--pad-section);
+  padding: var(--sp-8) var(--pad-cell);
   border-bottom: 1px solid var(--line);
   transition: background-color var(--d-base) var(--ease-out);
 }
@@ -1137,7 +1147,7 @@ html:not(.js) .flow-divider .sweep { animation: sweepLine 6s var(--ease-out) inf
 
 /* ---------- 5.5 BENEFÍCIOS ---------- */
 .benefits__rail {
-  display: grid; grid-auto-flow: column; grid-auto-columns: minmax(17rem, 22rem);
+  display: grid; grid-auto-flow: column; grid-auto-columns: max(17rem, calc((100% - 5px) / 6));
   gap: 1px; background: var(--line);
   overflow-x: auto; overscroll-behavior-x: contain;
   scrollbar-width: none;
@@ -1149,7 +1159,7 @@ html:not(.js) .flow-divider .sweep { animation: sweepLine 6s var(--ease-out) inf
 .card {
   position: relative; overflow: hidden;
   display: flex; flex-direction: column; justify-content: space-between; gap: var(--sp-10);
-  min-height: 26rem; padding: var(--sp-8);
+  min-height: 26rem; padding: var(--sp-8) var(--pad-cell);
   background: var(--bg);
   transition: background-color var(--d-base) var(--ease-out);
 }
@@ -1174,7 +1184,7 @@ html:not(.js) .flow-divider .sweep { animation: sweepLine 6s var(--ease-out) inf
 
 .benefits__foot {
   display: flex; justify-content: space-between; align-items: center; gap: var(--sp-6);
-  padding: var(--sp-6) var(--pad-section);
+  padding: var(--sp-6) var(--pad-cell);
 }
 .benefits__progress { flex: 1; max-width: 20rem; height: 1px; background: var(--line); position: relative; }
 .benefits__progress i { position: absolute; inset: 0; background: var(--text); transform-origin: left; transform: scaleX(.2); }
@@ -1208,7 +1218,7 @@ html:not(.js) .flow-divider .sweep { animation: sweepLine 6s var(--ease-out) inf
 .finale__links { margin-top: var(--sp-6); display: flex; justify-content: center; gap: var(--sp-6); font-size: var(--fs-sm); color: var(--inverse-meta); }
 .finale__links a:hover { color: #FFFFFF; }
 
-.footer { position: relative; border-top: 1px solid var(--inverse-line); padding: var(--sp-12) var(--gutter) var(--sp-8); max-width: var(--container); margin-inline: auto; }
+.footer { position: relative; border-top: 1px solid var(--inverse-line); padding: var(--sp-12) max(var(--gutter), calc((100% - var(--grid-max)) / 2)) var(--sp-8); }
 .footer__grid { display: grid; grid-template-columns: 1fr; gap: var(--sp-10); }
 @media (min-width: 768px) { .footer__grid { grid-template-columns: 3fr 2fr 2fr 2fr; } }
 .footer .brand__word { color: #FFFFFF; }
@@ -1308,12 +1318,20 @@ html:not(.js) .flow-divider .sweep { animation: sweepLine 6s var(--ease-out) inf
   .step { padding: var(--sp-5); max-width: 100%; }
   .step--d h2 { font-size: 2.25rem; }
   .scrub__hud { bottom: var(--sp-6); }
-  .stat { min-height: 16rem; padding: var(--sp-6); }
+  .stat { min-height: 16rem; padding: var(--sp-6) var(--pad-cell); }
   .card { min-height: 22rem; }
 }
 
 @media (min-width: 1536px) {
-  .pen { right: calc((100vw - var(--container)) / 2 - 4rem); }
+  .pen { right: calc(max(var(--gutter), calc((100% - var(--grid-max)) / 2)) + 3.25rem); }
+}
+
+/* Acima do limite da grade (2200px + gutters) o quadro fica com margens largas:
+   as linhas horizontais internas seguem até as bordas da tela (sem "caixa flutuando"). */
+@media (min-width: 2420px) {
+  .frame .sec-head, .frame .stats, .frame .tech__feature, .frame .anat, .frame .benefits__rail {
+    border-image: linear-gradient(var(--line), var(--line)) 0 0 1 0 / 0 0 1px 0 / 0 100vw;
+  }
 }
 
 /* ==========================================================================
