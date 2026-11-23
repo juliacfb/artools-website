@@ -1,6 +1,6 @@
 /* ==========================================================================
    ARTOOLS Precision Pen — main.js
-   Seções: 0. setup · 1. easing do DS · 2. tema · 3. Lenis · 4. sequência de
+   Seções: 0. setup · 1. easing do DS · 2. tema (só claro) · 3. Lenis · 4. sequência de
    frames · 5. preloader · 6. intro do hero · 7. hero (float/tilt/scroll) ·
    8. filme (scrub) · 9. reveals · 10. trilho/odômetro · 11. cursor ·
    12. botões magnéticos · 13. benefícios (drag) · 14. navegação · 15. boot
@@ -66,42 +66,9 @@
   gsap.defaults({ ease: EXPO, duration: D.slow });
 
   /* ------------------------------------------------------------------------
-     2. TEMA — claro/escuro com View Transitions (reveal circular a partir do botão)
+     2. TEMA — só claro. Limpa a preferência gravada por versões antigas (tinham modo escuro).
      ------------------------------------------------------------------------ */
-  const Theme = (() => {
-    const btn = $('.theme-toggle');
-    const metaColor = $('meta[name="theme-color"]');
-    const get = () => (root.dataset.theme === 'dark' ? 'dark' : 'light');
-    function apply(t) {
-      root.dataset.theme = t;
-      try { localStorage.setItem('artools-theme', t); } catch (e) { /* storage indisponível */ }
-      btn.setAttribute('aria-pressed', String(t === 'dark'));
-      btn.setAttribute('aria-label', t === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro');
-      if (metaColor) metaColor.content = t === 'dark' ? '#1C1917' : '#EAEAE5';
-    }
-    function toggle() {
-      const next = get() === 'dark' ? 'light' : 'dark';
-      if (!document.startViewTransition || REDUCED) {
-        root.classList.add('theme-anim');
-        apply(next);
-        setTimeout(() => root.classList.remove('theme-anim'), 650);
-        return;
-      }
-      const r = btn.getBoundingClientRect();
-      const x = r.left + r.width / 2, y = r.top + r.height / 2;
-      const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
-      const vt = document.startViewTransition(() => apply(next));
-      vt.ready.then(() => {
-        root.animate(
-          { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
-          { duration: D.slow * 1000, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', pseudoElement: '::view-transition-new(root)' }
-        );
-      }).catch(() => {});
-    }
-    apply(get());
-    btn.addEventListener('click', toggle);
-    return { get };
-  })();
+  try { localStorage.removeItem('artools-theme'); } catch (e) { /* storage indisponível */ }
 
   /* ------------------------------------------------------------------------
      3. LENIS — smooth scroll inercial integrado ao ScrollTrigger
@@ -439,7 +406,7 @@
 
   /* Posição da caneta (≥1024px), em unidades fluidas da grade e do título:
      - centro mira 64% da viewport (PEN_TARGET);
-     - a ponta traseira termina antes da linha direita da grade (= botão de tema) e do trilho,
+     - a ponta traseira termina antes da linha direita da grade (padding do header) e do trilho,
        com respiro clamp(1rem, 2vw, 3rem);
      - o eixo cruza "mais tecnológica" logo DEPOIS da última letra: o corpo inclinado passa
        por trás só do fim da palavra (≈ "ica"), e o resto continua legível;
@@ -476,7 +443,7 @@
     const thick = 0.05 * W;                                   // meia-espessura visual (corpo + clipe)
     const reachX = (L / 2) * ux + thick, reachY = (L / 2) * uy + thick;
 
-    // limites horizontais: linha direita da grade e trilho, menos o respiro
+    // limites horizontais: borda direita do conteúdo do header e trilho, menos o respiro
     const gridRight = vw - parseFloat(getComputedStyle($('.site-header')).paddingRight);
     const breathe = Math.min(Math.max(16, vw * 0.02), 48);
     const limit = Math.min(gridRight, $('.rail').getBoundingClientRect().left) - breathe;

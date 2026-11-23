@@ -1,10 +1,11 @@
 <!doctype html>
-<html lang="pt-BR" data-theme="light">
+<html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>ARTOOLS Precision Pen — A caneta mais tecnológica do mundo</title>
   <meta name="description" content="A Artools Precision Pen redefine o equilíbrio entre peso, fluxo e design. Ponta de 0.1 mm, tinta pigmentada e equilíbrio perfeito para criadores que exigem precisão em cada traço." />
+  <meta name="color-scheme" content="light" />
   <meta name="theme-color" content="#EAEAE5" />
   <meta property="og:title" content="ARTOOLS Precision Pen" />
   <meta property="og:description" content="A caneta mais tecnológica do mundo. Ponta 0.1 mm, tinta pigmentada." />
@@ -12,16 +13,8 @@
   <meta property="og:type" content="website" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%231C1917'/%3E%3Cpath d='M16 6l6 8-6 12-6-12z' fill='none' stroke='%23fff' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M16 14v7' stroke='%23fff' stroke-width='1.6'/%3E%3C/svg%3E" />
 
-  <!-- Tema antes da primeira pintura (evita flash) + flag de JS -->
-  <script>
-    (function () {
-      var d = document.documentElement, t = null;
-      d.classList.add('js');
-      try { t = localStorage.getItem('artools-theme'); } catch (e) {}
-      if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      d.setAttribute('data-theme', t);
-    })();
-  </script>
+  <!-- Flag de JS antes da primeira pintura -->
+  <script>document.documentElement.classList.add('js');</script>
 
   <!-- Fontes do DS: Inter (300–700) + JetBrains Mono (400–500) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -78,18 +71,6 @@
     </nav>
 
     <div class="header__actions">
-      <button class="theme-toggle" type="button" aria-label="Ativar tema escuro" aria-pressed="false">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <mask id="moon-mask">
-            <rect width="24" height="24" fill="#fff" />
-            <circle class="moon-bite" cx="30" cy="-6" r="7" fill="#000" />
-          </mask>
-          <circle class="sun-core" cx="12" cy="12" r="5" fill="currentColor" mask="url(#moon-mask)" />
-          <g class="rays" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-            <path d="M12 1.5v2.2M12 20.3v2.2M1.5 12h2.2M20.3 12h2.2M4.6 4.6l1.5 1.5M17.9 17.9l1.5 1.5M4.6 19.4l1.5-1.5M17.9 6.1l1.5-1.5" />
-          </g>
-        </svg>
-      </button>
       <button class="burger" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu">
         <span></span><span></span><span></span>
       </button>
@@ -364,7 +345,7 @@
             <dt class="spec__top"><span>Estúdio</span><span class="spec__idx" aria-hidden="true">Fig. 03</span></dt>
             <dd>
               <figure class="spec__figure">
-                <!-- render de estúdio sobre branco: multiply no claro, painel de estúdio no escuro; zoom atrelado ao scroll -->
+                <!-- render de estúdio sobre branco: multiply sobre o fundo; zoom atrelado ao scroll -->
                 <div class="media media--studio" data-clip data-zoom data-cursor="Ver">
                   <img src="assets/img/pen-studio.webp" width="1200" height="676" loading="lazy" decoding="async"
                        onerror="this.parentNode.classList.add('is-broken')"

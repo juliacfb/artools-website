@@ -45,7 +45,6 @@
   --stone-700: #44403C;
   --stone-800: #292524;
   --stone-900: #1C1917;
-  --stone-950: #0C0A09;
   --signal: #10B981;
   --danger: #FF453A;
   --warning: #FFAA00;
@@ -55,7 +54,6 @@
   --bg: var(--canvas);
   --bg-band: rgb(245 245 244 / .5);           /* bg-stone-100/50 */
   --surface: var(--paper);                    /* hover / raised */
-  --surface-glass: rgb(255 255 255 / .6);
   --text: var(--stone-900);                   /* 14.5:1 AAA */
   --text-body: var(--stone-800);
   --text-2: var(--stone-600);                 /* 6.3:1 AA — usado também em labels pequenos */
@@ -186,48 +184,6 @@
   --z-preloader: 10001;     /* derivado */
 }
 
-/* Tema escuro — derivado: o DS não define dark mode; usa os papéis "invertido" do DS
-   (footer/CTA: bg stone-900, texto stone-200, meta stone-400, borda stone-800) */
-[data-theme="dark"] {
-  color-scheme: dark;
-  --bg: var(--stone-900);
-  --bg-band: rgb(41 37 36 / .5);
-  --surface: var(--stone-800);
-  --surface-glass: rgb(41 37 36 / .6);
-  --text: var(--stone-100);
-  --text-body: var(--stone-200);
-  --text-2: var(--stone-400);
-  --text-meta: var(--stone-400);
-  --text-deco: var(--stone-500);
-  --line: var(--stone-700);
-  --line-soft: rgb(68 64 60 / .7);
-  --line-guide: rgb(68 64 60 / .4);
-  --line-strong: var(--stone-100);
-  --btn-bg: var(--stone-100);
-  --btn-fg: var(--stone-900);
-  --btn-hover: var(--stone-300);
-  --btn-2-bg: var(--stone-800);
-  --btn-2-fg: var(--stone-100);
-  --header-bg: rgb(28 25 23 / .85);
-  --inverse-bg: var(--stone-950);
-  --inverse-line: var(--stone-800);
-  --hero-glow: rgb(255 255 255 / .07);
-  --hero-vignette: rgb(0 0 0 / .45);
-  --pen-shadow: rgb(0 0 0 / .7);
-  --noise-opacity: .07;
-  --noise-blend: overlay;
-  --selection-bg: var(--stone-200);
-  --selection-fg: var(--stone-900);
-  --focus: var(--stone-100);
-  --outline-ghost: var(--stone-700);
-  --outline-ink: var(--stone-100);
-  --anat-line: var(--stone-400);
-  --loupe-bg: var(--stone-200);               /* derivado: no escuro a lupa vira um disco claro, como uma lente iluminada */
-  --lens-fade: 95%;                           /* borda nítida: no escuro o esfumado vira halo */
-  --sh-soft: 0 8px 24px rgb(0 0 0 / .45);
-  --sh-lift: 0 24px 40px -24px rgb(0 0 0 / .7);
-}
-
 /* ==========================================================================
    2. BASE
    ========================================================================== */
@@ -280,14 +236,6 @@ p { text-wrap: pretty; }
   border-radius: 2px;
 }
 
-/* Transição global de tema (fallback quando View Transitions não existe) */
-html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *::after {
-  transition: background-color var(--d-base) var(--ease-out), color var(--d-base) var(--ease-out),
-              border-color var(--d-base) var(--ease-out), fill var(--d-base) var(--ease-out),
-              stroke var(--d-base) var(--ease-out), -webkit-text-stroke-color var(--d-base) var(--ease-out) !important;
-}
-::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
-
 /* ==========================================================================
    3. LAYOUT
    ========================================================================== */
@@ -300,7 +248,7 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
 
 /* Moldura arquitetônica do DS: border-x · guias 3/6/3. Ocupa a largura útil inteira:
    as bordas ficam --pad-cell para fora da linha do gutter, então o texto das células
-   cai exatamente na linha do logo (esquerda) e do botão de tema (direita). */
+   cai exatamente na linha do logo (esquerda) e da borda direita do header. */
 .frame {
   position: relative;
   margin-inline: calc(max(var(--gutter), calc((100% - var(--grid-max)) / 2)) - var(--pad-cell));
@@ -318,7 +266,6 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
   background: linear-gradient(to bottom, transparent, rgb(28 25 23 / .5), transparent);
   animation: guide 26s linear infinite;
 }
-[data-theme="dark"] .guides i { background: linear-gradient(to bottom, transparent, rgb(245 245 244 / .35), transparent); }
 @media (max-width: 767px) { .guides { display: none; } }
 .frame > :not(.guides) { position: relative; z-index: 1; }   /* guias sempre por baixo do conteúdo */
 .split-line-mask { padding-block: .1em; margin-block: -.1em; } /* folga p/ acentos e descendentes */
@@ -342,7 +289,6 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
   font-size: 10rem; line-height: 1; font-weight: 600; letter-spacing: var(--tr-tighter);
   color: transparent; -webkit-text-stroke: 1px var(--stone-400);
 }
-[data-theme="dark"] .sec-head__num span { -webkit-text-stroke-color: var(--stone-700); }
 @media (min-width: 768px) {
   .sec-head { grid-template-columns: 8fr 4fr; }
   .sec-head__num { display: flex; }
@@ -470,23 +416,6 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
 .nav__link:hover::after, .nav__link.is-active::after { transform: scaleX(1); transform-origin: left; }
 
 .header__actions { justify-self: end; display: flex; align-items: center; gap: var(--sp-2); }
-
-/* Botão de tema: sol ↔ lua (morph por máscara + raios girando) */
-.theme-toggle {
-  position: relative; width: 2.75rem; height: 2.75rem; border-radius: var(--r-full);
-  display: grid; place-items: center; color: var(--text);
-  border: 1px solid var(--line);
-  transition: border-color var(--d-base) var(--ease-out), background-color var(--d-base) var(--ease-out);
-}
-.theme-toggle:hover { border-color: var(--line-strong); background: var(--surface-glass); }
-.theme-toggle svg { width: 1.25rem; height: 1.25rem; overflow: visible; transition: transform .7s var(--ease-out); }
-.theme-toggle .sun-core { transition: r .7s var(--ease-out); }
-.theme-toggle .moon-bite { transition: cx .7s var(--ease-out), cy .7s var(--ease-out); }
-.theme-toggle .rays { transform-box: fill-box; transform-origin: center; transition: transform .7s var(--ease-out), opacity var(--d-instant) var(--ease-out); }
-[data-theme="dark"] .theme-toggle svg { transform: rotate(-90deg); }
-[data-theme="dark"] .theme-toggle .sun-core { r: 9; }
-[data-theme="dark"] .theme-toggle .moon-bite { cx: 17; cy: 7; }
-[data-theme="dark"] .theme-toggle .rays { transform: rotate(45deg) scale(.4); opacity: 0; }
 
 /* Menu mobile (DS burger + clip-path) */
 .burger { display: none; width: 2.75rem; height: 2.75rem; border-radius: var(--r-full); border: 1px solid var(--line); flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
@@ -737,7 +666,6 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
   filter: drop-shadow(0 30px 30px rgb(28 25 23 / .12));
   user-select: none; -webkit-user-drag: none;
 }
-[data-theme="dark"] .pen__img { filter: drop-shadow(0 30px 40px rgb(0 0 0 / .5)); }
 .pen__shadow {
   position: absolute; left: 14%; right: 10%; top: 112%; height: 14%;
   border-radius: 50%;
@@ -834,7 +762,6 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
   position: relative; overflow: hidden; background: var(--stone-200);
   clip-path: inset(0 0 0 0);
 }
-[data-theme="dark"] .media { background: var(--stone-800); }
 .media img {
   position: absolute; left: 0; top: -10%; width: 100%; height: 120%;
   object-fit: cover;
@@ -950,7 +877,6 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
       radial-gradient(50% 50% at 50% 30%, rgb(28 25 23 / .10), transparent 100%);
     filter: blur(6px); transform-origin: 50% 0;
   }
-  [data-theme="dark"] .anat__shadow { background: radial-gradient(50% 35% at 50% 25%, rgb(0 0 0 / .75), transparent 100%); }
 
   .anat__dot { width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; background: var(--stone-900); box-shadow: 0 0 0 2px rgb(255 255 255 / .9); }
   .anat__dot.is-active { box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 7px rgb(28 25 23 / .14); }
@@ -1067,7 +993,7 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
 /* foto (DS: project card + image strip): enquadrada, reveal com clip-path e parallax interno */
 .spec__figure { margin: 0; flex: 1; display: flex; flex-direction: column; gap: var(--sp-3); }
 /* Fig. 03 — estúdio. Mesma caixa de antes (flex:1 + min-height): proporção do bento intacta.
-   Borda transparente sempre presente → trocar de tema não muda 1px do layout. */
+   Borda transparente sempre presente (reserva 1px fixo no layout). */
 .media--studio {
   flex: 1; min-height: 18rem;
   border: 1px solid transparent;
@@ -1087,18 +1013,10 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
 /* hover: mais luz e contraste (o branco segue branco, a sombra adensa) e a caneta sobe 5px.
    `translate` é independente do `transform` que o GSAP escreve — os dois somam. */
 .spec--photo:hover .media--studio img { filter: brightness(1.03) contrast(1.08); translate: 0 -5px; }
-/* escuro: painel de estúdio iluminado de propósito — branco do DS (= fundo da foto), cantos e borda do DS */
-[data-theme="dark"] .media--studio,
-[data-theme="dark"] .spec--photo:hover .media--studio {
-  background: var(--paper); border-color: var(--line); border-radius: var(--r-lg);
-}
-[data-theme="dark"] .media--studio img { mix-blend-mode: normal; }
 /* falha no carregamento: placeholder neutro; a img fica transparente (sem alt cortado nem ícone quebrado),
    mas continua no DOM com o alt para leitores de tela */
 .media--studio.is-broken,
 .spec--photo:hover .media--studio.is-broken { background: var(--stone-200); }
-[data-theme="dark"] .media--studio.is-broken,
-[data-theme="dark"] .spec--photo:hover .media--studio.is-broken { background: var(--stone-800); }
 .media--studio.is-broken img { opacity: 0; }
 @media (prefers-reduced-motion: reduce) {
   .media--studio img { transform: scale(1.1); }
@@ -1131,8 +1049,6 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
   -webkit-mask-composite: xor; mask-composite: exclude;
   opacity: 0; transition: opacity var(--d-base);
 }
-[data-theme="dark"] .flashlight::before { background: radial-gradient(400px circle at var(--mx, 50%) var(--my, 50%), rgb(255 255 255 / .08), transparent 45%); }
-[data-theme="dark"] .flashlight::after { background: radial-gradient(200px circle at var(--mx, 50%) var(--my, 50%), rgb(255 255 255 / .6), transparent 50%); }
 .flashlight:hover::before, .flashlight:hover::after { opacity: 1; }
 .flashlight > * { position: relative; z-index: 1; }
 
@@ -1195,7 +1111,6 @@ html:not(.js) .flow-divider .sweep { animation: sweepLine 6s var(--ease-out) inf
 .stat__viz .muted { stroke: var(--line); }
 .viz-bar { transform-box: fill-box; transform-origin: bottom; }
 .viz-bar--a { fill: var(--stone-300); } .viz-bar--b { fill: var(--stone-400); } .viz-bar--c { fill: var(--stone-500); } .viz-bar--d { fill: var(--text); }
-[data-theme="dark"] .viz-bar--a { fill: var(--stone-700); } [data-theme="dark"] .viz-bar--b { fill: var(--stone-600); }
 
 .tech__feature { display: grid; grid-template-columns: 1fr; border-bottom: 1px solid var(--line); }
 @media (min-width: 1024px) { .tech__feature { grid-template-columns: 5fr 7fr; } }

@@ -7,7 +7,7 @@ public/                     ← pasta publicada (raiz do site)
   index.html
   robots.txt
   css/style.css             tokens → base → layout → componentes → seções → animações → utilitários → responsivo
-  js/main.js                tema · Lenis · sequência de frames · preloader · hero · filme · reveals · trilho · cursor · botões
+  js/main.js                Lenis · sequência de frames · preloader · hero · filme · reveals · trilho · cursor · botões
   assets/img/               caneta recortada (hero), stills de produto, og.jpg
   assets/frames/lg|sm/      240 quadros WebP (1920 e 960 px) para o scroll scrub
   assets/video/             video_scrub.mp4 (fallback, keyframe em todo quadro)
@@ -77,7 +77,7 @@ Todos os valores vêm dos dois arquivos; o que precisou ser derivado está marca
 - Headline em **700** (o maior peso do DS — "Pesos 300 → 700"); o briefing pede extra bold, mas 800 não existe no DS.
 - Nav em **mono** (o DS usa Inter 500 no nav); o briefing pede mono, e o estilo "Label / Mono" do DS cobre isso.
 - Rótulos pequenos em **stone-600** (6.3:1) em vez de stone-500 (4:1 — o próprio DS limita stone-500 a texto grande).
-- **Tema escuro** não existe no DS: derivado dos papéis "invertido" (bg stone-900, texto stone-200, meta stone-400, bordas stone-800).
+- **Só tema claro**: o site não tem modo escuro (força `color-scheme: light`, mesmo com o sistema em escuro).
 
 ## Conteúdo provisório
 
