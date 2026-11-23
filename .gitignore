@@ -1,0 +1,23 @@
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/*
+!.vscode/settings.json
+*.swp
+
+# Dependências / builds locais
+node_modules/
+.vercel/
+.netlify/
+
+# Python (scripts de mídia)
+__pycache__/
+*.pyc
+.venv/
+
+# Logs e temporários
+*.log
+*.tmp

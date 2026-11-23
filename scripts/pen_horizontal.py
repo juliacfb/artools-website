@@ -1,4 +1,4 @@
-"""Gera assets/img/pen-horizontal.webp a partir de pen-hero.webp (alfa preservado).
+"""Gera public/assets/img/pen-horizontal.webp a partir de pen-hero.webp (alfa preservado).
 
 1. Mede o eixo da caneta por PCA do canal alfa e gira até a horizontal
    (em alfa pré-multiplicado, para o bicúbico não puxar o branco do fundo original).
@@ -12,7 +12,7 @@ Uso: python -I scripts/pen_horizontal.py
 import numpy as np
 from PIL import Image, ImageFilter
 
-src = Image.open("assets/img/pen-hero.webp").convert("RGBA")
+src = Image.open("public/assets/img/pen-hero.webp").convert("RGBA")
 a = np.asarray(src)[..., 3]
 ys, xs = np.nonzero(a > 128)
 pts = np.stack([xs, ys], 1).astype(float)
@@ -59,5 +59,5 @@ ramp[:n] = np.linspace(0, 1, n); ramp[-n:] = np.linspace(1, 0, n)
 A[:, x0:x1] = A[:, x0:x1] * (1 - ramp) + band * ramp
 
 rot.putalpha(Image.fromarray((A * 255).round().astype(np.uint8)))
-rot.save("assets/img/pen-horizontal.webp", "WEBP", quality=90, method=6)
+rot.save("public/assets/img/pen-horizontal.webp", "WEBP", quality=90, method=6)
 print(f"angle {angle:.2f} -> size {rot.size}; corpo topo {kt:.4f}x+{bt:.1f}, base {kb:.4f}x+{bb:.1f}")

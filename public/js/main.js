@@ -62,7 +62,7 @@
   const EXPO = bezier(0.16, 1, 0.3, 1);        // --ease-out (ease-out-expo)
   const ELASTIC = bezier(0.34, 1.56, 0.64, 1); // --ease-elastic
   // Durações do DS (s)
-  const D = { instant: 0.3, base: 0.5, slow: 1, cine: 1.2, cineLong: 1.5 };
+  const D = { instant: 0.3, base: 0.5, slow: 1, cine: 1.2, cineLong: 1.5, stagger: 0.1 };   // stagger = --stagger (.1s)
   gsap.defaults({ ease: EXPO, duration: D.slow });
 
   /* ------------------------------------------------------------------------
@@ -671,10 +671,25 @@
     // 9.3 Mídia: clip-path reveal + parallax interno
     $$('[data-clip]').forEach(fig => {
       const img = $('img', fig);
+      // erro antes do JS (inline onerror já cobre) ou depois: marca o placeholder
+      if (img.complete && !img.naturalWidth) fig.classList.add('is-broken');
+      img.addEventListener('error', () => fig.classList.add('is-broken'), { once: true });
       if (REDUCED) return;
-      gsap.timeline({ scrollTrigger: { trigger: fig, start: 'top 85%', once: true } })
-        .fromTo(fig, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: D.cineLong, ease: EXPO })
-        .fromTo(img, { scale: 1.25 }, { scale: 1, duration: D.cineLong + 0.3, ease: EXPO }, 0);
+      // em cache (img.complete) segue direto; senão recalcula os gatilhos quando a imagem chegar,
+      // para o reveal nunca ficar preso em inset(100%) por posição calculada antes do load
+      if (!img.complete) img.addEventListener('load', () => ScrollTrigger.refresh(), { once: true });
+      const tl = gsap.timeline({ scrollTrigger: { trigger: fig, start: 'top 85%', once: true } })
+        .fromTo(fig, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: D.cineLong, ease: EXPO });
+      // Fig. 03 (estúdio): em vez do zoom de entrada + parallax, zoom lento atrelado ao scroll,
+      // abrindo do close no logo/clipe para a caneta mais inteira enquanto o bloco atravessa a tela
+      if (fig.hasAttribute('data-zoom')) {
+        gsap.fromTo(img, { scale: 1.25 }, {
+          scale: 1.1, ease: 'none',
+          scrollTrigger: { trigger: fig, start: 'top bottom', end: 'bottom top', scrub: true },
+        });
+        return;
+      }
+      tl.fromTo(img, { scale: 1.25 }, { scale: 1, duration: D.cineLong + 0.3, ease: EXPO }, 0);
       gsap.fromTo(img, { yPercent: -6 }, {
         yPercent: 6, ease: 'none',
         scrollTrigger: { trigger: fig, start: 'top bottom', end: 'bottom top', scrub: true },

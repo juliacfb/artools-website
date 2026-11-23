@@ -361,14 +361,16 @@
           </div>
 
           <div class="spec spec--photo" data-reveal>
-            <dt class="spec__top"><span>Na sua mesa</span><span class="spec__idx" aria-hidden="true">Fig. 03</span></dt>
+            <dt class="spec__top"><span>Estúdio</span><span class="spec__idx" aria-hidden="true">Fig. 03</span></dt>
             <dd>
               <figure class="spec__figure">
-                <div class="media media--warm" data-clip data-cursor="Ver">
-                  <img src="assets/img/pen-desk.webp" width="720" height="1280" loading="lazy" decoding="async" data-parallax
-                       alt="Caneta ARTOOLS Pigmentum sobre uma mesa de madeira, em diagonal." />
+                <!-- render de estúdio sobre branco: multiply no claro, painel de estúdio no escuro; zoom atrelado ao scroll -->
+                <div class="media media--studio" data-clip data-zoom data-cursor="Ver">
+                  <img src="assets/img/pen-studio.webp" width="1200" height="676" loading="lazy" decoding="async"
+                       onerror="this.parentNode.classList.add('is-broken')"
+                       alt="Caneta ARTOOLS Pigmentum 0.1 branca, com clipe metálico, flutuando sobre fundo de estúdio" />
                 </div>
-                <figcaption class="spec__figcap">Fig. 03 — Pigmentum 0.1 no dia a dia</figcaption>
+                <figcaption class="spec__figcap">Fig. 03 — Pigmentum 0.1, vista de estúdio</figcaption>
               </figure>
             </dd>
           </div>

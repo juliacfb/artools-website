@@ -1,6 +1,6 @@
 /* ==========================================================================
    ARTOOLS Precision Pen — style.css
-   Fonte da verdade: Architect DS v3 (design_system_new.html) + v4 (design_system_new2.html)
+   Fonte da verdade: Architect DS v3 + v4 (design/design_systems/design_system_new*.html)
    Ordem: 1. tokens → 2. base → 3. layout → 4. componentes → 5. seções
           → 6. animações → 7. utilitários → 8. responsivo / reduced-motion
    Breakpoints do DS (Tailwind): sm 640 · md 768 · lg 1024 · xl 1280 · 2xl 1536
@@ -1066,11 +1066,44 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
 
 /* foto (DS: project card + image strip): enquadrada, reveal com clip-path e parallax interno */
 .spec__figure { margin: 0; flex: 1; display: flex; flex-direction: column; gap: var(--sp-3); }
-.media--warm { flex: 1; min-height: 18rem; }
-/* novo: dessaturação leve + tom quente-neutro, para a madeira conversar com a paleta stone */
-.media--warm img { object-position: 48% 46%; filter: saturate(.6) sepia(.12) contrast(1.02); }
-.spec--photo:hover .media--warm img { filter: saturate(.85) sepia(.06) contrast(1.02); }
-[data-theme="dark"] .media--warm img { filter: saturate(.55) sepia(.12) brightness(.82); }
+/* Fig. 03 — estúdio. Mesma caixa de antes (flex:1 + min-height): proporção do bento intacta.
+   Borda transparente sempre presente → trocar de tema não muda 1px do layout. */
+.media--studio {
+  flex: 1; min-height: 18rem;
+  border: 1px solid transparent;
+  background: var(--bg);                                /* claro: o branco da foto (multiply) vira a cor do card */
+  transition: background-color var(--d-base) var(--ease-out), border-color var(--d-base) var(--ease-out);
+}
+.spec--photo:hover .media--studio { background: var(--surface); }   /* acompanha o hover do card, sem emenda */
+.media--studio img {
+  inset: 0; top: 0; height: 100%;                       /* sem parallax vertical: só o zoom de scroll */
+  object-fit: cover; object-position: 40% 45%;          /* fechado no logo "ARTOOLS Pigmentum" + clipe */
+  transform-origin: 40% 45%;
+  transform: scale(1.25);                               /* estado inicial do zoom (GSAP: 1.25 → 1.1 com scrub) */
+  mix-blend-mode: multiply;
+  filter: none;
+  transition: filter var(--d-base) var(--ease-out), translate var(--d-base) var(--ease-out);
+}
+/* hover: mais luz e contraste (o branco segue branco, a sombra adensa) e a caneta sobe 5px.
+   `translate` é independente do `transform` que o GSAP escreve — os dois somam. */
+.spec--photo:hover .media--studio img { filter: brightness(1.03) contrast(1.08); translate: 0 -5px; }
+/* escuro: painel de estúdio iluminado de propósito — branco do DS (= fundo da foto), cantos e borda do DS */
+[data-theme="dark"] .media--studio,
+[data-theme="dark"] .spec--photo:hover .media--studio {
+  background: var(--paper); border-color: var(--line); border-radius: var(--r-lg);
+}
+[data-theme="dark"] .media--studio img { mix-blend-mode: normal; }
+/* falha no carregamento: placeholder neutro; a img fica transparente (sem alt cortado nem ícone quebrado),
+   mas continua no DOM com o alt para leitores de tela */
+.media--studio.is-broken,
+.spec--photo:hover .media--studio.is-broken { background: var(--stone-200); }
+[data-theme="dark"] .media--studio.is-broken,
+[data-theme="dark"] .spec--photo:hover .media--studio.is-broken { background: var(--stone-800); }
+.media--studio.is-broken img { opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .media--studio img { transform: scale(1.1); }
+  .spec--photo:hover .media--studio img { translate: none; }
+}
 .spec__figcap {
   padding-top: var(--sp-3); border-top: 1px solid var(--line);
   font-family: var(--font-mono); font-size: var(--fs-overline); letter-spacing: var(--tr-widest);
